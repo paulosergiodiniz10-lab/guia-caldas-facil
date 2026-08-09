@@ -55,21 +55,24 @@
             <!-- Cover Header -->
             <div class="h-[250px] md:h-[350px] w-full relative">
                 <img id="company-cover" src="" alt="Cover" class="w-full h-full object-cover" />
+                <!-- Gradiente mais suave agora que o texto não fica mais aqui -->
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 
-                <div class="absolute bottom-4 left-4 md:left-12 z-10">
+                <div class="absolute bottom-4 left-4 md:left-8 z-10">
                     <span id="company-category" class="bg-[#FFC700] text-[#021A3A] text-xs font-bold px-3 py-1 rounded shadow-md inline-block">Categoria</span>
                 </div>
             </div>
 
             <!-- Header Info (Logo and Name) -->
-            <div class="max-w-7xl mx-auto px-4 relative flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16 md:-mt-24 mb-8">
-                <div class="w-32 h-32 md:w-48 md:h-48 rounded-2xl border-4 border-gray-50 overflow-hidden shadow-xl bg-white shrink-0 z-20">
+            <div class="max-w-7xl mx-auto px-4 relative flex flex-col md:flex-row gap-6 mb-8">
+                <!-- A margem negativa (-mt-16 e -mt-20) agora está SÓ na logo, puxando apenas ela para cima do banner -->
+                <div class="-mt-16 md:-mt-20 w-32 h-32 md:w-48 md:h-48 rounded-2xl border-4 border-white overflow-hidden shadow-lg bg-white shrink-0 z-20 mx-auto md:mx-4">
                     <img id="company-logo" src="" alt="Logo" class="w-full h-full object-cover" />
                 </div>
-                <div class="text-center md:text-left flex-1 pb-2">
-                    <h1 id="company-name" class="text-3xl md:text-5xl font-black text-[#021A3A] leading-tight mb-2">Nome da Empresa</h1>
-                    <div class="flex items-center justify-center md:justify-start gap-2 text-gray-800 bg-white border border-gray-200 px-4 py-1.5 rounded-full w-fit shadow-sm mx-auto md:mx-0">
+                <!-- O texto agora fica naturalmente na parte branca (abaixo do banner) -->
+                <div class="text-center md:text-left flex-1 pt-2 md:pt-4">
+                    <h1 id="company-name" class="text-3xl md:text-5xl font-black text-[#021A3A] leading-tight mb-3">Nome da Empresa</h1>
+                    <div class="flex items-center justify-center md:justify-start gap-2 text-gray-800 bg-gray-50 border border-gray-200 px-4 py-1.5 rounded-full w-fit shadow-sm mx-auto md:mx-0">
                         <i data-lucide="star" class="w-5 h-5 text-[#FFC700] fill-current"></i>
                         <span id="company-rating" class="font-bold text-lg">5.0</span>
                     </div>
