@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Guia Caldas Fácil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-100 font-sans min-h-screen">
+
+    <!-- Header do Painel -->
+    <header class="bg-[#021A3A] text-white py-4 px-6 flex justify-between items-center shadow-md">
+        <div class="flex items-center gap-2">
+            <i data-lucide="settings" class="text-[#FFC700] w-6 h-6"></i>
+            <h1 class="font-bold text-xl">Painel Administrativo</h1>
+        </div>
+        <a href="index.html" class="text-sm hover:text-[#FFC700] transition-colors flex items-center gap-2">
+            <i data-lucide="external-link" class="w-4 h-4"></i> Ver Site
+        </a>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-6">
+        <div class="bg-white rounded-xl shadow-md p-6 md:p-8">
+            <div class="mb-6 border-b pb-4">
+                <h2 class="text-2xl font-bold text-gray-800">Cadastrar Nova Empresa</h2>
+                <p class="text-gray-500 text-sm">Preencha os dados abaixo. O sistema fará o cadastro automático no banco de dados.</p>
+            </div>
+
+            <form id="admin-form" class="space-y-6">
+                <!-- Informações Básicas -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">ID da Empresa (URL)*</label>
+                        <input type="text" id="compId" placeholder="ex: piratas-pizzaria (sem espaços)" required class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 bg-gray-50">
+                        <p class="text-xs text-gray-500 mt-1">Isso será o link da empresa: ?id=nome</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Nome da Empresa*</label>
+                        <input type="text" id="compName" placeholder="Piratas Pizzaria" required class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Categoria*</label>
+                        <input type="text" id="compCat" placeholder="Gastronomia" required class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Nota (Estrelas)</label>
+                        <input type="text" id="compRating" placeholder="4.8" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-1">Descrição</label>
+                    <textarea id="compDesc" rows="3" placeholder="Escreva sobre a empresa..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
+                </div>
+
+                <!-- Contato e Localização -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Endereço</label>
+                        <input type="text" id="compAddress" placeholder="Rua, Número - Bairro" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Telefone / WhatsApp</label>
+                        <input type="text" id="compPhone" placeholder="Apenas números (ex: 5564999999999)" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Status de Funcionamento</label>
+                        <input type="text" id="compStatus" placeholder="Aberto agora" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Link do Google Maps</label>
+                        <input type="text" id="compMap" placeholder="https://maps.app.goo.gl/..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Imagens Principais -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Link da Logo (Quadrada)</label>
+                        <input type="text" id="compLogo" placeholder="https://link-da-imagem.com/logo.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Link da Capa (Retangular)</label>
+                        <input type="text" id="compCover" placeholder="https://link-da-imagem.com/capa.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                    </div>
+                </div>
+
+                <!-- Galeria e Vídeos (Onde a mágica acontece) -->
+                <div class="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h3 class="font-bold text-gray-800">Mídias Extras</h3>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Galeria de Fotos (Separe os links por VÍRGULA)</label>
+                        <textarea id="compGallery" rows="2" placeholder="link1.jpg, link2.jpg, link3.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-1">Vídeos do YouTube (Separe os links por VÍRGULA)</label>
+                        <textarea id="compVideos" rows="2" placeholder="https://youtube.com/embed/..., https://youtube.com/embed/..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
+                    </div>
+                </div>
+
+                <!-- Cupom de Desconto -->
+                <div class="space-y-4 p-4 bg-red-50 rounded-lg border border-red-100">
+                    <h3 class="font-bold text-red-800 flex items-center gap-2"><i data-lucide="percent" class="w-4 h-4"></i> Adicionar 1 Cupom (Opcional)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-1">Título do Cupom</label>
+                            <input type="text" id="couponTitle" placeholder="Ex: 15% OFF" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-1">Código Promocional</label>
+                            <input type="text" id="couponCode" placeholder="Ex: PIRATA15" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-1">Regras/Validade</label>
+                            <input type="text" id="couponRules" placeholder="Ex: Válido até sexta" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" id="save-btn" class="w-full bg-[#021A3A] hover:bg-blue-900 text-white font-bold py-4 rounded-lg flex items-center justify-center gap-2 transition-colors text-lg shadow-lg">
+                    <i data-lucide="save" class="w-5 h-5"></i> Salvar Empresa no Banco de Dados
+                </button>
+                <div id="status-msg" class="hidden text-center font-bold p-3 rounded-lg mt-4"></div>
+            </form>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Suas chaves do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCrdkV7_A3kUdvfOEfkpYhUZgfzEhEAfM",
+            authDomain: "guia-caldas-facil.firebaseapp.com",
+            projectId: "guia-caldas-facil",
+            storageBucket: "guia-caldas-facil.firebasestorage.app",
+            messagingSenderId: "46826988375",
+            appId: "1:46826988375:web:64a22b576e24c181d1d412"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        const form = document.getElementById('admin-form');
+        const btn = document.getElementById('save-btn');
+        const statusMsg = document.getElementById('status-msg');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Impede a página de recarregar
+            
+            // Muda o botão para mostrar que está carregando
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Salvando...`;
+            btn.classList.add('opacity-70', 'cursor-not-allowed');
+            
+            // 1. Pega o ID (único para cada empresa)
+            const compId = document.getElementById('compId').value.trim().toLowerCase().replace(/\s+/g, '-');
+
+            // 2. Prepara as listas de galeria e vídeo (divide pelas vírgulas e limpa espaços)
+            const rawGallery = document.getElementById('compGallery').value;
+            const galleryArray = rawGallery ? rawGallery.split(',').map(item => item.trim()).filter(item => item !== "") : [];
+
+            const rawVideos = document.getElementById('compVideos').value;
+            const videosArray = rawVideos ? rawVideos.split(',').map(item => item.trim()).filter(item => item !== "") : [];
+
+            // 3. Prepara o cupom (se houver título)
+            let couponsArray = [];
+            const couponTitle = document.getElementById('couponTitle').value;
+            if(couponTitle) {
+                couponsArray.push({
+                    title: couponTitle,
+                    code: document.getElementById('couponCode').value,
+                    rules: document.getElementById('couponRules').value
+                });
+            }
+
+            // 4. Monta o pacote de dados que vai pro Firebase
+            const companyData = {
+                name: document.getElementById('compName').value,
+                category: document.getElementById('compCat').value,
+                rating: document.getElementById('compRating').value,
+                description: document.getElementById('compDesc').value,
+                address: document.getElementById('compAddress').value,
+                phone: document.getElementById('compPhone').value,
+                status: document.getElementById('compStatus').value,
+                mapUrl: document.getElementById('compMap').value,
+                logoUrl: document.getElementById('compLogo').value,
+                coverUrl: document.getElementById('compCover').value,
+                gallery: galleryArray,
+                videos: videosArray,
+                coupons: couponsArray
+            };
+
+            try {
+                // 5. Salva de verdade no Firebase (Cria ou Atualiza)
+                await setDoc(doc(db, "empresas", compId), companyData);
+                
+                statusMsg.textContent = "✅ Empresa cadastrada/atualizada com sucesso!";
+                statusMsg.className = "text-green-700 bg-green-100 font-bold p-3 rounded-lg mt-4 block text-center";
+                
+                // Volta o botão ao normal
+                btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Salvar Empresa no Banco de Dados`;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+                lucide.createIcons();
+                
+            } catch (error) {
+                console.error("Erro:", error);
+                statusMsg.textContent = "❌ Erro ao salvar: " + error.message;
+                statusMsg.className = "text-red-700 bg-red-100 font-bold p-3 rounded-lg mt-4 block text-center";
+                
+                btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Tentar Novamente`;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+                lucide.createIcons();
+            }
+        });
+    </script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
