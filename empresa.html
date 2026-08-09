@@ -100,6 +100,30 @@
                             <!-- Cupons serão injetados aqui via JS -->
                         </div>
                     </section>
+
+                    <!-- Galeria de Fotos -->
+                    <section id="gallery-section" class="hidden">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="image" class="w-6 h-6 text-[#FFC700]"></i>
+                            <h2 class="text-xl font-bold text-[#021A3A]">Galeria de Fotos</h2>
+                        </div>
+                        
+                        <div id="gallery-list" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <!-- Fotos serão injetadas aqui via JS -->
+                        </div>
+                    </section>
+
+                    <!-- Vídeos -->
+                    <section id="videos-section" class="hidden">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="youtube" class="w-6 h-6 text-red-600"></i>
+                            <h2 class="text-xl font-bold text-[#021A3A]">Vídeos</h2>
+                        </div>
+                        
+                        <div id="videos-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Vídeos serão injetados aqui via JS -->
+                        </div>
+                    </section>
                 </div>
 
                 <!-- Right Column (Sidebar de Contato) -->
@@ -174,6 +198,15 @@
                 coupons: [
                     { title: "15% OFF no Rodízio", rules: "Válido de Terça a Quinta", code: "PIRATA15" },
                     { title: "Sobremesa Grátis", rules: "Na compra de 1 Pizza G", code: "DOCEPIRATA" }
+                ],
+                gallery: [
+                    "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=500&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=500&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=500&auto=format&fit=crop"
+                ],
+                videos: [
+                    "https://www.youtube.com/embed/5Peo-ivmupE?si=B5e0i_o5h5_A5z2O", // Link de 'incorporação' do YouTube (embed)
+                    "https://www.youtube.com/embed/tgbNymZ7vqY"
                 ]
             },
             "aurion-energy": {
@@ -265,6 +298,36 @@
                             </div>
                         `;
                         couponsList.insertAdjacentHTML('beforeend', couponHTML);
+                    });
+                }
+
+                // Injetando Galeria de Fotos (se houver)
+                if (companyData.gallery && companyData.gallery.length > 0) {
+                    document.getElementById('gallery-section').classList.remove('hidden');
+                    const galleryList = document.getElementById('gallery-list');
+                    
+                    companyData.gallery.forEach(imgUrl => {
+                        const imgHTML = `
+                            <a href="${imgUrl}" target="_blank" class="block aspect-square overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-shadow group border border-gray-100">
+                                <img src="${imgUrl}" alt="Foto da Galeria" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                            </a>
+                        `;
+                        galleryList.insertAdjacentHTML('beforeend', imgHTML);
+                    });
+                }
+
+                // Injetando Vídeos (se houver)
+                if (companyData.videos && companyData.videos.length > 0) {
+                    document.getElementById('videos-section').classList.remove('hidden');
+                    const videosList = document.getElementById('videos-list');
+                    
+                    companyData.videos.forEach(videoUrl => {
+                        const videoHTML = `
+                            <div class="aspect-video w-full rounded-xl overflow-hidden shadow-sm bg-gray-100 border border-gray-200">
+                                <iframe src="${videoUrl}" title="Vídeo da Empresa" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
+                            </div>
+                        `;
+                        videosList.insertAdjacentHTML('beforeend', videoHTML);
                     });
                 }
 
