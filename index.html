@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Caldas Fácil</title>
+    
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Configuração do Tailwind para fontes personalizadas -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Ocultar barra de rolagem dos carrosséis */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-[#021A3A] text-white py-3 px-4 md:px-8 flex justify-between items-center sticky top-0 z-50 shadow-md">
+        <div class="flex items-center gap-2 cursor-pointer" onclick="navigateTo('home-page')">
+            <i data-lucide="map-pin" class="text-[#FFC700] w-8 h-8"></i>
+            <div>
+                <h1 class="font-bold text-xl md:text-2xl leading-none flex gap-1">
+                    GUIA <span class="text-[#FFC700]">CALDAS FÁCIL</span>
+                </h1>
+                <p class="text-xs text-gray-300">O guia comercial completo de Caldas Novas</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-4">
+            <button class="hidden md:flex items-center gap-2 hover:text-[#FFC700] transition-colors font-medium">
+                <i data-lucide="user" class="w-5 h-5"></i>
+                <span>Login</span>
+            </button>
+            <button class="bg-[#FFC700] text-[#021A3A] font-bold py-2 px-4 rounded-md flex items-center gap-2 hover:bg-yellow-400 transition-colors shadow-lg shadow-yellow-500/20">
+                <i data-lucide="megaphone" class="w-4 h-4 hidden sm:block"></i>
+                <span class="hidden sm:inline">Anuncie</span> Grátis
+            </button>
+            <button class="md:hidden text-white">
+                <i data-lucide="menu" class="w-7 h-7"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- CONTEÚDO PRINCIPAL (Trocado via JavaScript) -->
+    <main class="flex-grow">
+        
+        <!-- PÁGINA: HOME -->
+        <div id="home-page" class="block">
+            <!-- Hero Section -->
+            <section class="relative w-full h-[500px] flex flex-col items-center justify-center px-4">
+                <div class="absolute inset-0 z-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1540544660406-6a69dacb2804?q=80&w=2000&auto=format&fit=crop')">
+                    <div class="absolute inset-0 bg-[#021A3A]/60"></div>
+                </div>
+
+                <div class="relative z-10 w-full max-w-5xl text-center flex flex-col items-center">
+                    <h2 class="text-3xl md:text-5xl font-bold text-white mb-4 drop-shadow-md">
+                        Encontre o que você precisa <br class="hidden md:block"/>
+                        em <span class="text-[#FFC700]">Caldas Novas</span>
+                    </h2>
+                    <p class="text-white text-lg md:text-xl mb-8 drop-shadow-sm font-medium">
+                        Empresas, serviços, promoções e muito mais!
+                    </p>
+
+                    <!-- Search Box -->
+                    <div class="bg-white rounded-xl p-4 w-full shadow-2xl flex flex-col md:flex-row gap-3">
+                        <div class="flex-1 flex flex-col text-left">
+                            <label class="text-xs font-bold text-gray-700 mb-1 ml-1">O que deseja?</label>
+                            <div class="flex items-center border rounded-lg px-3 py-2 bg-gray-50 focus-within:ring-2 ring-blue-500">
+                                <span class="text-blue-500 mr-2 text-xl">🍽️</span>
+                                <input type="text" placeholder="Ex.: Onde comer, Onde ficar..." class="w-full bg-transparent outline-none text-sm" />
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1 flex flex-col text-left">
+                            <label class="text-xs font-bold text-gray-700 mb-1 ml-1">Qual segmento?</label>
+                            <div class="flex items-center border rounded-lg px-3 py-2 bg-gray-50 focus-within:ring-2 ring-blue-500">
+                                <span class="text-green-500 mr-2 text-xl">🗂️</span>
+                                <select class="w-full bg-transparent outline-none text-sm text-gray-600 appearance-none">
+                                    <option value="">Ex.: Hotel, Pizzaria, Parque...</option>
+                                    <option value="hotel">Hotéis</option>
+                                    <option value="gastronomia">Gastronomia</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 flex flex-col text-left">
+                            <label class="text-xs font-bold text-gray-700 mb-1 ml-1">Busca por palavra-chave</label>
+                            <div class="flex items-center border rounded-lg px-3 py-2 bg-gray-50 focus-within:ring-2 ring-blue-500">
+                                <i data-lucide="search" class="w-5 h-5 text-gray-400 mr-2"></i>
+                                <input type="text" placeholder="Nome, serviço, produto..." class="w-full bg-transparent outline-none text-sm" />
+                            </div>
+                        </div>
+
+                        <div class="flex items-end mt-2 md:mt-0">
+                            <button class="w-full md:w-auto bg-[#238833] hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition-colors">
+                                Buscar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-4 mt-6">
+                        <button class="bg-[#021A3A] hover:bg-blue-900 border border-blue-800 text-white px-6 py-2 rounded-full flex items-center gap-2 transition-colors font-medium text-sm shadow-lg shadow-black/20">
+                            <i data-lucide="map-pin" class="w-4 h-4"></i> Perto de mim
+                        </button>
+                        <button class="bg-[#021A3A] hover:bg-blue-900 border border-blue-800 text-white px-6 py-2 rounded-full flex items-center gap-2 transition-colors font-medium text-sm shadow-lg shadow-black/20">
+                            <i data-lucide="map" class="w-4 h-4"></i> Ver no mapa
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Highlights / Banners Superiores -->
+            <section class="max-w-7xl mx-auto py-12 px-4 relative">
+                <button class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md z-10 hidden md:block hover:bg-white">
+                    <i data-lucide="chevron-left" class="w-6 h-6 text-gray-800"></i>
+                </button>
+                
+                <div class="flex overflow-x-auto gap-4 md:gap-6 pb-4 snap-x hide-scrollbar">
+                    
+                    <!-- Banner 1 -->
+                    <div class="min-w-[280px] md:min-w-[350px] flex-1 h-[350px] rounded-2xl overflow-hidden relative snap-center group cursor-pointer shadow-lg" onclick="navigateTo('company-page')">
+                        <img src="https://images.unsplash.com/photo-1582298538104-efa9ca148386?q=80&w=600&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                        <div class="absolute inset-0 p-6 flex flex-col justify-end">
+                            <h3 class="text-2xl font-bold text-white mb-1 font-serif italic">diRoma Acqua Park</h3>
+                            <p class="text-gray-200 text-sm mb-4">Diversão para toda a família!</p>
+                            <button class="bg-[#FFC700] hover:bg-yellow-400 text-[#021A3A] font-bold py-2 px-6 rounded-md w-fit transition-colors">Compre agora</button>
+                        </div>
+                    </div>
+
+                    <!-- Banner 2 -->
+                    <div class="min-w-[280px] md:min-w-[350px] flex-1 h-[350px] rounded-2xl overflow-hidden relative snap-center group cursor-pointer shadow-lg" onclick="navigateTo('company-page')">
+                        <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=600&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                        <div class="absolute inset-0 p-6 flex flex-col justify-end">
+                            <h3 class="text-2xl font-bold text-white mb-1 font-serif italic">Sabor & Arte</h3>
+                            <p class="text-gray-200 text-sm mb-4">O melhor da gastronomia espera por você!</p>
+                            <button class="bg-[#FFC700] hover:bg-yellow-400 text-[#021A3A] font-bold py-2 px-6 rounded-md w-fit transition-colors">Ver cardápio</button>
+                        </div>
+                    </div>
+
+                    <!-- Banner 3 -->
+                    <div class="min-w-[280px] md:min-w-[350px] flex-1 h-[350px] rounded-2xl overflow-hidden relative snap-center group cursor-pointer shadow-lg" onclick="navigateTo('company-page')">
+                        <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=600&auto=format&fit=crop" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>
+                        <div class="absolute inset-0 p-6 flex flex-col justify-end">
+                            <h3 class="text-2xl font-bold text-white mb-1 font-serif italic">MOBI Locadora</h3>
+                            <p class="text-gray-200 text-sm mb-4">Alugue o carro ideal e aproveite!</p>
+                            <button class="bg-[#FFC700] hover:bg-yellow-400 text-[#021A3A] font-bold py-2 px-6 rounded-md w-fit transition-colors">Reservar agora</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md z-10 hidden md:block hover:bg-white">
+                    <i data-lucide="chevron-right" class="w-6 h-6 text-gray-800"></i>
+                </button>
+            </section>
+
+            <!-- Super Banners -->
+            <section class="max-w-7xl mx-auto px-4 flex flex-col gap-8 pb-12">
+                <!-- Super Banner 1 -->
+                <div class="w-full bg-[#1A0F00] rounded-2xl overflow-hidden relative flex flex-col md:flex-row items-center cursor-pointer shadow-xl border border-yellow-900/30 group" onclick="navigateTo('company-page')">
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=2000&auto=format&fit=crop')] opacity-20 bg-cover bg-center"></div>
+                    
+                    <div class="w-full md:w-1/3 h-64 md:h-auto flex items-center justify-center p-4 relative z-10">
+                        <img src="https://placehold.co/400x400/transparent/FFC700?text=Pirata+Mascote" alt="Pirata" class="h-full object-contain drop-shadow-2xl group-hover:scale-105 transition-transform" />
+                    </div>
+                    
+                    <div class="w-full md:w-2/3 p-8 flex flex-col justify-center items-center md:items-start text-center md:text-left relative z-10">
+                        <h3 class="text-4xl md:text-6xl font-black text-[#FFC700] mb-2 font-serif tracking-wide drop-shadow-lg" style="text-shadow: 2px 2px 0px #000">Piratas Pizzaria</h3>
+                        <p class="text-xl md:text-2xl text-white italic font-bold mb-6">Diversão e Sabor à Bordo!</p>
+                        <button class="bg-[#FFC700] hover:bg-yellow-400 text-black font-bold text-lg py-3 px-8 rounded-lg transition-transform transform hover:scale-105 shadow-[0_0_15px_rgba(255,199,0,0.5)]">
+                            Compre Seu Ingresso
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Super Banner 2 -->
+                <div class="w-full bg-[#0b284e] rounded-2xl overflow-hidden relative flex flex-col md:flex-row cursor-pointer shadow-xl border border-blue-800">
+                    <div class="w-full md:w-1/2 p-8 relative z-10 flex flex-col justify-center">
+                        <h3 class="text-3xl md:text-4xl font-bold text-white mb-2">
+                            AURION <span class="font-light text-blue-300 text-sm tracking-widest block">ENERGY</span>
+                        </h3>
+                        <h4 class="text-2xl md:text-3xl font-bold text-white mt-4 mb-2">Energia Solar por Assinatura</h4>
+                        <p class="text-[#FFC700] text-xl font-bold mb-6">Até 25% de economia</p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                            <div class="flex items-center gap-2 text-white text-sm">
+                                <div class="p-2 border border-blue-500 rounded-full"><span class="text-xl">📋</span></div>
+                                <span>Sem investimento<br/>inicial</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-white text-sm">
+                                <div class="p-2 border border-blue-500 rounded-full text-[#FFC700]"><span class="text-xl">📊</span></div>
+                                <span>Até 25% de<br/>economia</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-white text-sm">
+                                <div class="p-2 border border-blue-500 rounded-full text-[#FFC700]"><span class="text-xl">⚡</span></div>
+                                <span>Energia limpa e<br/>sustentável</span>
+                            </div>
+                        </div>
+                        
+                        <button class="bg-[#FFC700] hover:bg-yellow-400 text-[#021A3A] font-bold py-3 px-8 rounded-lg w-fit transition-colors">
+                            Saiba Mais
+                        </button>
+                    </div>
+                    
+                    <div class="w-full md:w-1/2 min-h-[300px] relative">
+                        <img src="https://images.unsplash.com/photo-1509391366360-1288cfa69f37?q=80&w=1000&auto=format&fit=crop" alt="Painel Solar" class="absolute inset-0 w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-r from-[#0b284e] to-transparent"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Cards -->
+            <section class="max-w-7xl mx-auto px-4 pb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-[#021A3A] rounded-2xl p-8 flex items-center gap-6 cursor-pointer hover:shadow-2xl transition-shadow group">
+                    <div class="bg-white/10 p-4 rounded-xl text-white group-hover:scale-110 transition-transform">
+                        <i data-lucide="briefcase" class="w-12 h-12"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-1">Empresas</h3>
+                        <p class="text-blue-200 mb-4 text-sm">Encontre as melhores empresas e serviços da cidade</p>
+                        <button class="border border-white/30 text-white hover:bg-white/10 font-medium py-2 px-6 rounded-lg transition-colors text-sm">
+                            Ver todas
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-[#990000] rounded-2xl p-8 flex items-center gap-6 cursor-pointer hover:shadow-2xl transition-shadow group">
+                    <div class="bg-white/10 p-4 rounded-xl text-[#FFC700] group-hover:scale-110 transition-transform">
+                        <i data-lucide="percent" class="w-12 h-12"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-white mb-1">Promoções Exclusivas</h3>
+                        <p class="text-red-200 mb-4 text-sm">Acesse cupons e ofertas especiais das melhores empresas</p>
+                        <button class="border border-white/30 text-white hover:bg-white/10 font-medium py-2 px-6 rounded-lg transition-colors text-sm">
+                            Ver promoções
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- PÁGINA: DETALHES DA EMPRESA (Oculta por padrão) -->
+        <div id="company-page" class="hidden pb-12">
+            <!-- Cover Header -->
+            <div class="h-[300px] w-full relative">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop" alt="Cover" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                
+                <button onclick="navigateTo('home-page')" class="absolute top-6 left-6 bg-white/20 hover:bg-white/40 backdrop-blur-md text-white p-2 rounded-full transition-colors z-10">
+                    <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                </button>
+
+                <div class="absolute -bottom-16 left-4 md:left-12 flex items-end gap-6 z-10">
+                    <div class="w-32 h-32 rounded-2xl border-4 border-gray-100 overflow-hidden shadow-lg bg-white">
+                        <img src="https://placehold.co/150x150/112240/facc15?text=PP" alt="Logo" class="w-full h-full object-cover" />
+                    </div>
+                    <div class="pb-4">
+                        <span class="bg-[#FFC700] text-[#021A3A] text-xs font-bold px-2 py-1 rounded mb-2 inline-block">Gastronomia</span>
+                        <h1 class="text-3xl md:text-4xl font-bold text-white drop-shadow-md">Piratas Pizzaria</h1>
+                        <div class="flex items-center gap-2 text-gray-200 mt-1">
+                            <i data-lucide="star" class="w-4 h-4 text-[#FFC700] fill-current"></i>
+                            <span class="font-bold text-white">4.8</span>
+                            <span class="text-sm">(342 avaliações)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Container -->
+            <div class="max-w-7xl mx-auto px-4 mt-24 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Left Column -->
+                <div class="lg:col-span-2 space-y-8">
+                    <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h2 class="text-xl font-bold text-[#021A3A] mb-4">Sobre a empresa</h2>
+                        <p class="text-gray-600 leading-relaxed">
+                            A pizzaria mais temática e divertida de Caldas Novas! Traga sua família para uma verdadeira aventura pirata enquanto saboreia as melhores pizzas da região. Espaço kids, rodízio e à la carte.
+                        </p>
+                    </section>
+
+                    <!-- Coupons -->
+                    <section>
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="percent" class="w-6 h-6 text-[#990000]"></i>
+                            <h2 class="text-xl font-bold text-[#021A3A]">Cupons de Desconto</h2>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Coupon 1 -->
+                            <div class="bg-gradient-to-r from-red-50 to-white border border-red-100 p-4 rounded-xl flex items-center justify-between shadow-sm relative overflow-hidden">
+                                <div class="absolute -right-4 -top-4 text-red-50 opacity-50">
+                                    <i data-lucide="percent" class="w-24 h-24"></i>
+                                </div>
+                                <div class="relative z-10">
+                                    <h4 class="font-bold text-red-700 text-lg">15% OFF no Rodízio</h4>
+                                    <p class="text-xs text-gray-500 mb-2">Válido de Terça a Quinta</p>
+                                    <div class="inline-block bg-white border-2 border-dashed border-red-200 text-red-600 font-mono font-bold py-1 px-3 rounded">PIRATA15</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Coupon 2 -->
+                            <div class="bg-gradient-to-r from-red-50 to-white border border-red-100 p-4 rounded-xl flex items-center justify-between shadow-sm relative overflow-hidden">
+                                <div class="absolute -right-4 -top-4 text-red-50 opacity-50">
+                                    <i data-lucide="percent" class="w-24 h-24"></i>
+                                </div>
+                                <div class="relative z-10">
+                                    <h4 class="font-bold text-red-700 text-lg">Sobremesa Grátis</h4>
+                                    <p class="text-xs text-gray-500 mb-2">Na compra de 1 Pizza G</p>
+                                    <div class="inline-block bg-white border-2 border-dashed border-red-200 text-red-600 font-mono font-bold py-1 px-3 rounded">DOCEPIRATA</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Right Column (Sidebar de Contato) -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-gray-400 mt-1"></i>
+                            <div>
+                                <p class="text-sm text-gray-600">Av. Orcalino Santos, 123 - Centro, Caldas Novas</p>
+                                <a href="#" class="text-blue-600 text-sm font-medium hover:underline mt-1 inline-block">Ver no mapa</a>
+                            </div>
+                        </div>
+                        <hr class="border-gray-50" />
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="clock" class="w-5 h-5 text-gray-400"></i>
+                            <span class="text-sm font-bold text-green-600">Aberto agora</span>
+                        </div>
+                        <hr class="border-gray-50" />
+                        
+                        <button class="w-full bg-[#25D366] hover:bg-green-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                            Chamar no WhatsApp
+                        </button>
+                        
+                        <div class="flex gap-2">
+                            <button class="flex-1 border border-gray-200 text-gray-700 hover:bg-gray-50 font-medium py-2 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                                <i data-lucide="phone" class="w-4 h-4"></i> Ligar
+                            </button>
+                            <button class="flex-1 border border-gray-200 text-gray-700 hover:bg-gray-50 font-medium py-2 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                                <i data-lucide="share-2" class="w-4 h-4"></i> Compartilhar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- UTILITIES BAR -->
+    <div class="border-y border-gray-200 bg-gray-50 overflow-x-auto hide-scrollbar">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between min-w-[800px]">
+            <a href="#" class="flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-blue-600"><i data-lucide="shield" class="w-5 h-5 text-blue-800"></i> Polícia</a>
+            <div class="w-px h-6 bg-gray-300"></div>
+            <a href="#" class="flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-blue-600"><i data-lucide="flame" class="w-5 h-5 text-red-600"></i> Bombeiros</a>
+            <div class="w-px h-6 bg-gray-300"></div>
+            <a href="#" class="flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-blue-600"><i data-lucide="cross" class="w-5 h-5 text-red-500"></i> Hospitais</a>
+            <div class="w-px h-6 bg-gray-300"></div>
+            <a href="#" class="flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-blue-600"><i data-lucide="pill" class="w-5 h-5 text-green-600"></i> Farmácias 24h</a>
+            <div class="w-px h-6 bg-gray-300"></div>
+            <a href="#" class="flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-blue-600"><i data-lucide="car" class="w-5 h-5 text-yellow-600"></i> Táxi</a>
+            <div class="w-px h-6 bg-gray-300"></div>
+            <a href="#" class="flex items-center gap-2 text-sm font-bold text-gray-700 hover:text-blue-600"><i data-lucide="instagram" class="w-5 h-5 text-pink-600"></i> Instagram</a>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-white pt-8 pb-4 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 mb-8 text-sm font-medium text-gray-600">
+            <a href="#" class="flex items-center gap-2 hover:text-blue-600"><i data-lucide="message-circle" class="w-5 h-5"></i> Fale Conosco</a>
+            <a href="#" class="flex items-center gap-2 hover:text-blue-600"><i data-lucide="briefcase" class="w-5 h-5"></i> Termos de Uso</a>
+            <a href="#" class="flex items-center gap-2 hover:text-blue-600"><i data-lucide="shield" class="w-5 h-5"></i> Privacidade</a>
+        </div>
+        
+        <div class="bg-[#021A3A] text-gray-400 text-xs py-4 px-4 flex flex-col md:flex-row justify-between items-center max-w-full">
+            <div class="flex items-center gap-2 mb-2 md:mb-0">
+                <i data-lucide="map-pin" class="w-4 h-4"></i> Caldas Novas - Goiás
+            </div>
+            <div class="text-center mb-2 md:mb-0">
+                © 2026 Guia Caldas Fácil - Todos os direitos reservados
+            </div>
+            <div>
+                Feito com carinho para você! ❤️
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT DA APLICAÇÃO (Troca de páginas e Inicialização dos ícones) -->
+    <script>
+        // Inicializa os ícones da biblioteca Lucide
+        lucide.createIcons();
+
+        // Função simples para esconder/mostrar as "páginas"
+        function navigateTo(pageId) {
+            // Esconde todas as páginas
+            document.getElementById('home-page').classList.add('hidden');
+            document.getElementById('home-page').classList.remove('block');
+            
+            document.getElementById('company-page').classList.add('hidden');
+            document.getElementById('company-page').classList.remove('block');
+
+            // Mostra a página desejada
+            document.getElementById(pageId).classList.remove('hidden');
+            document.getElementById(pageId).classList.add('block');
+            
+            // Rola a página para o topo suavemente
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
