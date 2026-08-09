@@ -135,9 +135,153 @@
         </div>
     </main>
 
-    <!-- Scripts da aplicação -->
-    <script type="module" src="js/firebase.js"></script>
-    <script type="module" src="js/empresa.js"></script>
+    <!-- Todo o JavaScript integrado em um só lugar -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // Inicializa o Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCrdkV7_A3kUdvfOEfkpYhUZgfzEhEAfM",
+            authDomain: "guia-caldas-facil.firebaseapp.com",
+            projectId: "guia-caldas-facil",
+            storageBucket: "guia-caldas-facil.firebasestorage.app",
+            messagingSenderId: "46826988375",
+            appId: "1:46826988375:web:64a22b576e24c181d1d412"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Banco de Dados Simulado (Mock)
+        const mockDatabase = {
+            "piratas-pizzaria": {
+                name: "Piratas Pizzaria",
+                category: "Gastronomia",
+                rating: "4.8",
+                description: "A pizzaria mais temática e divertida de Caldas Novas! Traga sua família para uma verdadeira aventura pirata enquanto saboreia as melhores pizzas da região. Espaço kids, rodízio e à la carte.",
+                address: "Av. Orcalino Santos, 123 - Centro, Caldas Novas",
+                status: "Aberto agora",
+                phone: "5564999999999", 
+                coverUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop",
+                logoUrl: "https://placehold.co/150x150/112240/facc15?text=PP",
+                coupons: [
+                    { title: "15% OFF no Rodízio", rules: "Válido de Terça a Quinta", code: "PIRATA15" },
+                    { title: "Sobremesa Grátis", rules: "Na compra de 1 Pizza G", code: "DOCEPIRATA" }
+                ]
+            },
+            "aurion-energy": {
+                name: "Aurion Energy",
+                category: "Serviços",
+                rating: "5.0",
+                description: "Energia Solar por Assinatura. Economize até 25% na sua conta de luz sem investir nada em painéis solares. Nós geramos a energia e você recebe o desconto direto na conta da Enel.",
+                address: "Atendimento Digital - Caldas Novas",
+                status: "Atendimento 24h (Online)",
+                phone: "5564988888888",
+                coverUrl: "https://images.unsplash.com/photo-1509391366360-1288cfa69f37?q=80&w=1200&auto=format&fit=crop",
+                logoUrl: "https://placehold.co/150x150/0b284e/ffffff?text=AE",
+                coupons: []
+            },
+            "diroma-acqua-park": {
+                name: "diRoma Acqua Park",
+                category: "Lazer",
+                rating: "4.9",
+                description: "Diversão garantida para toda a família com as melhores piscinas de águas quentes de Caldas Novas.",
+                address: "R. São Cristóvão, 1110 - Solar de Caldas",
+                status: "Aberto agora",
+                phone: "556434531586",
+                coverUrl: "https://images.unsplash.com/photo-1582298538104-efa9ca148386?q=80&w=1200&auto=format&fit=crop",
+                logoUrl: "https://placehold.co/150x150/0ea5e9/ffffff?text=DR",
+                coupons: []
+            }
+        };
+
+        // Função principal que carrega os dados
+        async function loadCompanyData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const companyId = urlParams.get('id');
+
+            const loadingDiv = document.getElementById('loading');
+            const contentDiv = document.getElementById('company-content');
+            const errorDiv = document.getElementById('error-message');
+
+            if (!companyId) {
+                loadingDiv.classList.add('hidden');
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                // Simula um tempo rápido de carregamento
+                await new Promise(resolve => setTimeout(resolve, 800)); 
+                
+                const companyData = mockDatabase[companyId];
+
+                if (!companyData) {
+                    throw new Error("Empresa não encontrada.");
+                }
+
+                // Injetando textos
+                document.getElementById('company-name').textContent = companyData.name;
+                document.getElementById('company-category').textContent = companyData.category;
+                document.getElementById('company-rating').textContent = companyData.rating;
+                document.getElementById('company-description').textContent = companyData.description;
+                document.getElementById('company-address').textContent = companyData.address;
+                document.getElementById('company-status').textContent = companyData.status;
+                
+                // Injetando imagens
+                document.getElementById('company-cover').src = companyData.coverUrl;
+                document.getElementById('company-logo').src = companyData.logoUrl;
+
+                // Injetando links
+                document.getElementById('company-whatsapp').href = `https://wa.me/${companyData.phone}`;
+                document.getElementById('company-phone').href = `tel:+${companyData.phone}`;
+                document.title = `${companyData.name} - Guia Caldas Fácil`;
+
+                // Injetando cupons (se houver)
+                if (companyData.coupons && companyData.coupons.length > 0) {
+                    document.getElementById('coupons-section').classList.remove('hidden');
+                    const couponsList = document.getElementById('coupons-list');
+                    
+                    companyData.coupons.forEach(coupon => {
+                        const couponHTML = `
+                            <div class="bg-gradient-to-r from-red-50 to-white border border-red-100 p-4 rounded-xl flex items-center justify-between shadow-sm relative overflow-hidden">
+                                <div class="absolute -right-4 -top-4 text-red-50 opacity-50">
+                                    <i data-lucide="percent" class="w-24 h-24"></i>
+                                </div>
+                                <div class="relative z-10">
+                                    <h4 class="font-bold text-red-700 text-lg">${coupon.title}</h4>
+                                    <p class="text-xs text-gray-500 mb-2">${coupon.rules}</p>
+                                    <div class="inline-block bg-white border-2 border-dashed border-red-200 text-red-600 font-mono font-bold py-1 px-3 rounded">
+                                        ${coupon.code}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        couponsList.insertAdjacentHTML('beforeend', couponHTML);
+                    });
+                }
+
+                // Troca as telas
+                loadingDiv.classList.add('hidden');
+                contentDiv.classList.remove('hidden');
+                lucide.createIcons(); // Recarrega ícones novos
+
+            } catch (error) {
+                console.error("Erro ao carregar:", error);
+                loadingDiv.classList.add('hidden');
+                errorDiv.classList.remove('hidden');
+            }
+        }
+
+        // Executa a função quando a página carregar
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadCompanyData);
+        } else {
+            loadCompanyData();
+        }
+    </script>
+
+    <!-- Ativação dos ícones iniciais -->
     <script>
         lucide.createIcons();
     </script>
