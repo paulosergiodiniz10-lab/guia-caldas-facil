@@ -146,6 +146,9 @@
                             <i data-lucide="map-pin" class="w-5 h-5 text-gray-400 mt-1"></i>
                             <div>
                                 <p id="company-address" class="text-sm text-gray-600">Endereço</p>
+                                <a id="company-map-link" href="#" target="_blank" class="text-blue-600 text-sm font-medium hover:underline mt-1 hidden items-center gap-1">
+                                    Ver no mapa <i data-lucide="external-link" class="w-3 h-3"></i>
+                                </a>
                             </div>
                         </div>
                         <hr class="border-gray-50" />
@@ -204,6 +207,7 @@
                 rating: "4.8",
                 description: "A pizzaria mais temática e divertida de Caldas Novas! Traga sua família para uma verdadeira aventura pirata enquanto saboreia as melhores pizzas da região. Espaço kids, rodízio e à la carte.",
                 address: "Av. Orcalino Santos, 123 - Centro, Caldas Novas",
+                mapUrl: "https://maps.app.goo.gl/exemploPiratas", // Link do Google Maps
                 status: "Aberto agora",
                 phone: "5564999999999", 
                 coverUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop",
@@ -230,6 +234,7 @@
                 rating: "5.0",
                 description: "Energia Solar por Assinatura. Economize até 25% na sua conta de luz sem investir nada em painéis solares. Nós geramos a energia e você recebe o desconto direto na conta da Enel.",
                 address: "Atendimento Digital - Caldas Novas",
+                mapUrl: "", // Empresa digital, sem mapa
                 status: "Atendimento 24h (Online)",
                 phone: "5564988888888",
                 coverUrl: "https://images.unsplash.com/photo-1509391366360-1288cfa69f37?q=80&w=1200&auto=format&fit=crop",
@@ -242,6 +247,7 @@
                 rating: "4.9",
                 description: "Diversão garantida para toda a família com as melhores piscinas de águas quentes de Caldas Novas.",
                 address: "R. São Cristóvão, 1110 - Solar de Caldas",
+                mapUrl: "https://maps.app.goo.gl/exemploDiroma",
                 status: "Aberto agora",
                 phone: "556434531586",
                 coverUrl: "https://images.unsplash.com/photo-1582298538104-efa9ca148386?q=80&w=1200&auto=format&fit=crop",
@@ -282,6 +288,15 @@
                 document.getElementById('company-description').textContent = companyData.description;
                 document.getElementById('company-address').textContent = companyData.address;
                 document.getElementById('company-status').textContent = companyData.status;
+
+                // Configura o link do mapa se existir
+                const mapLinkElement = document.getElementById('company-map-link');
+                if (companyData.mapUrl) {
+                    mapLinkElement.href = companyData.mapUrl;
+                    mapLinkElement.style.display = 'flex'; // Mostra o link
+                } else {
+                    mapLinkElement.style.display = 'none'; // Esconde se não tiver link
+                }
                 
                 // Injetando imagens
                 document.getElementById('company-cover').src = companyData.coverUrl;
@@ -299,16 +314,22 @@
                     
                     companyData.coupons.forEach(coupon => {
                         const couponHTML = `
-                            <div class="bg-gradient-to-r from-red-50 to-white border border-red-100 p-4 rounded-xl flex items-center justify-between shadow-sm relative overflow-hidden">
-                                <div class="absolute -right-4 -top-4 text-red-50 opacity-50">
+                            <div class="bg-gradient-to-r from-red-50 to-white border border-red-100 p-4 rounded-xl flex items-center justify-between shadow-sm relative overflow-hidden group">
+                                <div class="absolute -right-4 -top-4 text-red-50 opacity-50 group-hover:scale-110 transition-transform">
                                     <i data-lucide="percent" class="w-24 h-24"></i>
                                 </div>
-                                <div class="relative z-10">
-                                    <h4 class="font-bold text-red-700 text-lg">${coupon.title}</h4>
-                                    <p class="text-xs text-gray-500 mb-2">${coupon.rules}</p>
-                                    <div class="inline-block bg-white border-2 border-dashed border-red-200 text-red-600 font-mono font-bold py-1 px-3 rounded">
-                                        ${coupon.code}
+                                <div class="relative z-10 w-full flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <h4 class="font-bold text-red-700 text-lg">${coupon.title}</h4>
+                                        <p class="text-xs text-gray-500 mb-2">${coupon.rules}</p>
+                                        <div class="inline-block bg-white border-2 border-dashed border-red-200 text-red-600 font-mono font-bold py-1 px-3 rounded">
+                                            ${coupon.code}
+                                        </div>
                                     </div>
+                                    <button onclick="alert('Esta função irá gerar um PDF ou Imagem do cupom quando conectarmos ao painel!')" class="shrink-0 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors border border-red-200 cursor-pointer z-20">
+                                        <i data-lucide="download" class="w-4 h-4"></i>
+                                        Baixar Cupom
+                                    </button>
                                 </div>
                             </div>
                         `;
