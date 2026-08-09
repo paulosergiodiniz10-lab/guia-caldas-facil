@@ -24,6 +24,10 @@
             }
         }
     </script>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
 </head>
 <body class="bg-gray-50 font-sans min-h-screen flex flex-col">
 
@@ -37,7 +41,7 @@
                 </h1>
             </div>
         </a>
-        <a href="index.html" class="flex items-center gap-2 text-white hover:text-[#FFC700] transition-colors">
+        <a href="index.html" class="flex items-center gap-2 text-white hover:text-[#FFC700] transition-colors font-medium">
             <i data-lucide="chevron-left" class="w-5 h-5"></i>
             <span>Voltar</span>
         </a>
@@ -45,51 +49,63 @@
 
     <main class="flex-grow pb-12 relative">
         <!-- Tela de Carregamento (Loading) -->
-        <div id="loading" class="absolute inset-0 bg-gray-50 z-40 flex flex-col items-center justify-center">
+        <div id="loading" class="absolute inset-0 bg-gray-50 z-40 flex flex-col items-center justify-center min-h-[60vh]">
             <i data-lucide="loader-2" class="w-12 h-12 text-[#021A3A] animate-spin mb-4"></i>
             <p class="text-gray-600 font-medium">Buscando informações da empresa...</p>
         </div>
 
-        <!-- Conteúdo da Empresa (Inicialmente Oculto e Vazio) -->
+        <!-- Mensagem de Erro (Inicialmente Oculta) -->
+        <div id="error-message" class="hidden absolute inset-0 bg-gray-50 z-40 flex flex-col items-center justify-center text-center px-4 min-h-[60vh]">
+            <i data-lucide="alert-circle" class="w-16 h-16 text-red-500 mb-4"></i>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Empresa não encontrada</h2>
+            <p class="text-gray-600 mb-6">A empresa que você tentou acessar não existe ou ainda não foi cadastrada no banco de dados.</p>
+            <a href="index.html" class="bg-[#021A3A] text-white px-6 py-2 rounded-md hover:bg-blue-900 transition-colors font-medium">Voltar para o Início</a>
+        </div>
+
+        <!-- Conteúdo da Empresa (Inicialmente Oculto) -->
         <div id="company-content" class="hidden">
-            <!-- Cover Header -->
-            <div class="h-[250px] md:h-[350px] w-full relative">
-                <img id="company-cover" src="" alt="Cover" class="w-full h-full object-cover" />
-                <!-- Gradiente mais suave agora que o texto não fica mais aqui -->
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            
+            <!-- Banner de Capa -->
+            <div class="h-[250px] md:h-[350px] w-full relative bg-gray-200">
+                <img id="company-cover" src="" alt="Capa da Empresa" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
                 
                 <div class="absolute bottom-4 left-4 md:left-8 z-10">
-                    <span id="company-category" class="bg-[#FFC700] text-[#021A3A] text-xs font-bold px-3 py-1 rounded shadow-md inline-block">Categoria</span>
+                    <span id="company-category" class="bg-[#FFC700] text-[#021A3A] text-xs font-bold px-3 py-1 rounded shadow-md inline-block uppercase tracking-wider">Categoria</span>
                 </div>
             </div>
 
-            <!-- Header Info (Logo and Name) -->
-            <div class="max-w-7xl mx-auto px-4 relative flex flex-col md:flex-row gap-6 mb-8">
-                <!-- A margem negativa (-mt-16 e -mt-20) agora está SÓ na logo, puxando apenas ela para cima do banner -->
-                <div class="-mt-16 md:-mt-20 w-32 h-32 md:w-48 md:h-48 rounded-2xl border-4 border-white overflow-hidden shadow-lg bg-white shrink-0 z-20 mx-auto md:mx-4">
-                    <img id="company-logo" src="" alt="Logo" class="w-full h-full object-cover" />
+            <!-- Header Info (Logo "cortando" a linha e Texto em baixo) -->
+            <div class="max-w-7xl mx-auto px-4 relative flex flex-col md:flex-row gap-4 md:gap-6 mb-8">
+                <!-- Apenas a logo sobe com margem negativa -->
+                <div class="-mt-16 md:-mt-20 w-32 h-32 md:w-40 md:h-40 rounded-2xl border-4 border-white overflow-hidden shadow-lg bg-white shrink-0 z-20 mx-auto md:mx-4">
+                    <img id="company-logo" src="" alt="Logo da Empresa" class="w-full h-full object-cover" />
                 </div>
-                <!-- O texto agora fica naturalmente na parte branca (abaixo do banner) -->
+                
+                <!-- O texto fica naturalmente na área branca com fonte escura -->
                 <div class="text-center md:text-left flex-1 pt-2 md:pt-4">
-                    <h1 id="company-name" class="text-3xl md:text-5xl font-black text-[#021A3A] leading-tight mb-3">Nome da Empresa</h1>
-                    <div class="flex items-center justify-center md:justify-start gap-2 text-gray-800 bg-gray-50 border border-gray-200 px-4 py-1.5 rounded-full w-fit shadow-sm mx-auto md:mx-0">
+                    <h1 id="company-name" class="text-3xl md:text-4xl font-black text-[#021A3A] leading-tight mb-2">Nome da Empresa</h1>
+                    <div class="flex items-center justify-center md:justify-start gap-2 text-gray-800 bg-gray-100 border border-gray-200 px-4 py-1.5 rounded-full w-fit shadow-sm mx-auto md:mx-0">
                         <i data-lucide="star" class="w-5 h-5 text-[#FFC700] fill-current"></i>
                         <span id="company-rating" class="font-bold text-lg">5.0</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Content Container -->
+            <!-- Container Principal (Duas colunas no PC) -->
             <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
-                <!-- Left Column -->
+                <!-- Coluna Esquerda (Conteúdo Principal) -->
                 <div class="lg:col-span-2 space-y-8">
+                    
                     <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                        <h2 class="text-xl font-bold text-[#021A3A] mb-4">Sobre a empresa</h2>
+                        <h2 class="text-xl font-bold text-[#021A3A] mb-4 flex items-center gap-2">
+                            <i data-lucide="info" class="w-5 h-5 text-blue-600"></i> Sobre a empresa
+                        </h2>
                         <p id="company-description" class="text-gray-600 leading-relaxed"></p>
                     </section>
 
-                    <!-- Coupons Container -->
+                    <!-- Cupons Container -->
                     <section id="coupons-section" class="hidden">
                         <div class="flex items-center gap-2 mb-4">
                             <i data-lucide="percent" class="w-6 h-6 text-[#990000]"></i>
@@ -97,29 +113,26 @@
                         </div>
                         
                         <div id="coupons-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Cupons serão injetados aqui via JS -->
+                            <!-- Cupons serão injetados aqui -->
                         </div>
                     </section>
 
-                    <!-- Galeria de Fotos (Carrossel Horizontal) -->
+                    <!-- Galeria de Fotos -->
                     <section id="gallery-section" class="hidden relative">
                         <div class="flex items-center gap-2 mb-4">
                             <i data-lucide="image" class="w-6 h-6 text-[#FFC700]"></i>
                             <h2 class="text-xl font-bold text-[#021A3A]">Galeria de Fotos</h2>
                         </div>
                         
-                        <!-- Container do Carrossel com scroll horizontal -->
                         <div class="relative group">
-                            <!-- Botão Voltar (opcional, mas bom para usabilidade desktop) -->
                             <button id="scroll-left" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-md z-10 hidden md:group-hover:flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
                                 <i data-lucide="chevron-left" class="w-5 h-5"></i>
                             </button>
 
                             <div id="gallery-list" class="flex overflow-x-auto gap-4 pb-4 snap-x hide-scrollbar scroll-smooth">
-                                <!-- Fotos serão injetadas aqui via JS -->
+                                <!-- Fotos serão injetadas aqui -->
                             </div>
 
-                            <!-- Botão Avançar -->
                             <button id="scroll-right" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-md z-10 hidden md:group-hover:flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
                                 <i data-lucide="chevron-right" class="w-5 h-5"></i>
                             </button>
@@ -134,60 +147,59 @@
                         </div>
                         
                         <div id="videos-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Vídeos serão injetados aqui via JS -->
+                            <!-- Vídeos (iframes) serão injetados aqui -->
                         </div>
                     </section>
                 </div>
 
-                <!-- Right Column (Sidebar de Contato) -->
+                <!-- Coluna Direita (Sidebar de Contato) -->
                 <div class="space-y-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4 sticky top-24">
+                        
                         <div class="flex items-start gap-3">
                             <i data-lucide="map-pin" class="w-5 h-5 text-gray-400 mt-1"></i>
                             <div>
-                                <p id="company-address" class="text-sm text-gray-600">Endereço</p>
-                                <a id="company-map-link" href="#" target="_blank" class="text-blue-600 text-sm font-medium hover:underline mt-1 hidden items-center gap-1">
+                                <p id="company-address" class="text-sm text-gray-600 font-medium">Endereço</p>
+                                <a id="company-map-link" href="#" target="_blank" class="text-blue-600 text-sm font-bold hover:underline mt-1 hidden items-center gap-1">
                                     Ver no mapa <i data-lucide="external-link" class="w-3 h-3"></i>
                                 </a>
                             </div>
                         </div>
-                        <hr class="border-gray-50" />
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="clock" class="w-5 h-5 text-gray-400"></i>
-                            <span id="company-status" class="text-sm font-bold text-green-600">Aberto agora</span>
-                        </div>
+                        
                         <hr class="border-gray-50" />
                         
-                        <a id="company-whatsapp" href="#" target="_blank" class="w-full bg-[#25D366] hover:bg-green-600 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="clock" class="w-5 h-5 text-gray-400"></i>
+                            <span id="company-status" class="text-sm font-bold text-green-600">Status de funcionamento</span>
+                        </div>
+                        
+                        <hr class="border-gray-50" />
+                        
+                        <a id="company-whatsapp" href="#" target="_blank" class="w-full bg-[#25D366] hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-md shadow-green-500/20">
                             <i data-lucide="message-circle" class="w-5 h-5"></i>
                             Chamar no WhatsApp
                         </a>
                         
                         <div class="flex gap-2">
-                            <a id="company-phone" href="#" class="flex-1 border border-gray-200 text-gray-700 hover:bg-gray-50 font-medium py-2 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                            <a id="company-phone" href="#" class="flex-1 border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors">
                                 <i data-lucide="phone" class="w-4 h-4"></i> Ligar
                             </a>
+                            <button onclick="navigator.share({title: document.title, url: window.location.href})" class="flex-1 border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                                <i data-lucide="share-2" class="w-4 h-4"></i> Compartilhar
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Mensagem de Erro -->
-        <div id="error-message" class="hidden absolute inset-0 bg-gray-50 z-40 flex flex-col items-center justify-center text-center px-4">
-            <i data-lucide="alert-circle" class="w-16 h-16 text-red-500 mb-4"></i>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">Empresa não encontrada</h2>
-            <p class="text-gray-600 mb-6">A empresa que você tentou acessar não existe ou foi removida.</p>
-            <a href="index.html" class="bg-[#021A3A] text-white px-6 py-2 rounded-md hover:bg-blue-900 transition-colors">Voltar para o Início</a>
-        </div>
     </main>
 
-    <!-- Todo o JavaScript integrado em um só lugar -->
+    <!-- Lógica embutida: Firebase + Preenchimento da Tela -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // Inicializa o Firebase
+        // 1. Suas chaves de configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDCrdkV7_A3kUdvfOEfkpYhUZgfzEhEAfM",
             authDomain: "guia-caldas-facil.firebaseapp.com",
@@ -199,65 +211,8 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Banco de Dados Simulado (Mock)
-        const mockDatabase = {
-            "piratas-pizzaria": {
-                name: "Piratas Pizzaria",
-                category: "Gastronomia",
-                rating: "4.8",
-                description: "A pizzaria mais temática e divertida de Caldas Novas! Traga sua família para uma verdadeira aventura pirata enquanto saboreia as melhores pizzas da região. Espaço kids, rodízio e à la carte.",
-                address: "Av. Orcalino Santos, 123 - Centro, Caldas Novas",
-                mapUrl: "https://maps.app.goo.gl/exemploPiratas", // Link do Google Maps
-                status: "Aberto agora",
-                phone: "5564999999999", 
-                coverUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop",
-                logoUrl: "https://i.postimg.cc/mZh4HnYp/LOGO-BLOG-fw.jpg", // Substituído pelo logo oficial postado!
-                coupons: [
-                    { title: "15% OFF no Rodízio", rules: "Válido de Terça a Quinta", code: "PIRATA15" },
-                    { title: "Sobremesa Grátis", rules: "Na compra de 1 Pizza G", code: "DOCEPIRATA" }
-                ],
-                gallery: [
-                    "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=500&auto=format&fit=crop",
-                    "https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=500&auto=format&fit=crop",
-                    "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=500&auto=format&fit=crop",
-                    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500&auto=format&fit=crop",
-                    "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=500&auto=format&fit=crop"
-                ],
-                videos: [
-                    "https://www.youtube.com/embed/5Peo-ivmupE?si=B5e0i_o5h5_A5z2O", // Link de 'incorporação' do YouTube (embed)
-                    "https://www.youtube.com/embed/tgbNymZ7vqY"
-                ]
-            },
-            "aurion-energy": {
-                name: "Aurion Energy",
-                category: "Serviços",
-                rating: "5.0",
-                description: "Energia Solar por Assinatura. Economize até 25% na sua conta de luz sem investir nada em painéis solares. Nós geramos a energia e você recebe o desconto direto na conta da Enel.",
-                address: "Atendimento Digital - Caldas Novas",
-                mapUrl: "", // Empresa digital, sem mapa
-                status: "Atendimento 24h (Online)",
-                phone: "5564988888888",
-                coverUrl: "https://images.unsplash.com/photo-1509391366360-1288cfa69f37?q=80&w=1200&auto=format&fit=crop",
-                logoUrl: "https://placehold.co/150x150/0b284e/ffffff?text=AE",
-                coupons: []
-            },
-            "diroma-acqua-park": {
-                name: "diRoma Acqua Park",
-                category: "Lazer",
-                rating: "4.9",
-                description: "Diversão garantida para toda a família com as melhores piscinas de águas quentes de Caldas Novas.",
-                address: "R. São Cristóvão, 1110 - Solar de Caldas",
-                mapUrl: "https://maps.app.goo.gl/exemploDiroma",
-                status: "Aberto agora",
-                phone: "556434531586",
-                coverUrl: "https://images.unsplash.com/photo-1582298538104-efa9ca148386?q=80&w=1200&auto=format&fit=crop",
-                logoUrl: "https://placehold.co/150x150/0ea5e9/ffffff?text=DR",
-                coupons: []
-            }
-        };
-
-        // Função principal que carrega os dados
         async function loadCompanyData() {
+            // Pega o ID da empresa que está na barra de endereço (ex: ?id=piratas-pizzaria)
             const urlParams = new URLSearchParams(window.location.search);
             const companyId = urlParams.get('id');
 
@@ -272,42 +227,44 @@
             }
 
             try {
-                // Simula um tempo rápido de carregamento
-                await new Promise(resolve => setTimeout(resolve, 800)); 
-                
-                const companyData = mockDatabase[companyId];
+                // 2. Busca os dados no Banco de Dados Real (Firestore)
+                const docRef = doc(db, "empresas", companyId);
+                const docSnap = await getDoc(docRef);
 
-                if (!companyData) {
-                    throw new Error("Empresa não encontrada.");
+                if (!docSnap.exists()) {
+                    throw new Error("Empresa não encontrada no banco de dados.");
                 }
 
-                // Injetando textos
-                document.getElementById('company-name').textContent = companyData.name;
-                document.getElementById('company-category').textContent = companyData.category;
-                document.getElementById('company-rating').textContent = companyData.rating;
-                document.getElementById('company-description').textContent = companyData.description;
-                document.getElementById('company-address').textContent = companyData.address;
-                document.getElementById('company-status').textContent = companyData.status;
+                // 3. Pega as informações do banco
+                const companyData = docSnap.data();
 
-                // Configura o link do mapa se existir
+                // 4. Preenche os textos na tela
+                document.getElementById('company-name').textContent = companyData.name || "Nome da Empresa";
+                document.getElementById('company-category').textContent = companyData.category || "Categoria";
+                document.getElementById('company-rating').textContent = companyData.rating || "5.0";
+                document.getElementById('company-description').textContent = companyData.description || "Descrição não informada.";
+                document.getElementById('company-address').textContent = companyData.address || "Endereço não informado.";
+                document.getElementById('company-status').textContent = companyData.status || "Status não informado";
+
+                // Map Link
                 const mapLinkElement = document.getElementById('company-map-link');
                 if (companyData.mapUrl) {
                     mapLinkElement.href = companyData.mapUrl;
-                    mapLinkElement.style.display = 'flex'; // Mostra o link
-                } else {
-                    mapLinkElement.style.display = 'none'; // Esconde se não tiver link
+                    mapLinkElement.style.display = 'flex';
                 }
-                
-                // Injetando imagens
-                document.getElementById('company-cover').src = companyData.coverUrl;
-                document.getElementById('company-logo').src = companyData.logoUrl;
 
-                // Injetando links
-                document.getElementById('company-whatsapp').href = `https://wa.me/${companyData.phone}`;
-                document.getElementById('company-phone').href = `tel:+${companyData.phone}`;
-                document.title = `${companyData.name} - Guia Caldas Fácil`;
+                // Imagens e Links
+                if(companyData.coverUrl) document.getElementById('company-cover').src = companyData.coverUrl;
+                if(companyData.logoUrl) document.getElementById('company-logo').src = companyData.logoUrl;
+                if(companyData.phone) {
+                    let foneNumerico = companyData.phone.replace(/\D/g,'');
+                    document.getElementById('company-whatsapp').href = `https://wa.me/${foneNumerico}`;
+                    document.getElementById('company-phone').href = `tel:+${foneNumerico}`;
+                }
 
-                // Injetando cupons (se houver)
+                document.title = `${companyData.name || 'Empresa'} - Guia Caldas Fácil`;
+
+                // 5. Verifica e injeta os Cupons
                 if (companyData.coupons && companyData.coupons.length > 0) {
                     document.getElementById('coupons-section').classList.remove('hidden');
                     const couponsList = document.getElementById('coupons-list');
@@ -326,7 +283,7 @@
                                             ${coupon.code}
                                         </div>
                                     </div>
-                                    <button onclick="alert('Esta função irá gerar um PDF ou Imagem do cupom quando conectarmos ao painel!')" class="shrink-0 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors border border-red-200 cursor-pointer z-20">
+                                    <button onclick="alert('Funcionalidade de download do cupom será conectada ao painel em breve!')" class="shrink-0 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors border border-red-200 cursor-pointer z-20">
                                         <i data-lucide="download" class="w-4 h-4"></i>
                                         Baixar Cupom
                                     </button>
@@ -337,63 +294,62 @@
                     });
                 }
 
-                // Injetando Galeria de Fotos (se houver)
+                // 6. Verifica e injeta a Galeria
                 if (companyData.gallery && companyData.gallery.length > 0) {
                     document.getElementById('gallery-section').classList.remove('hidden');
                     const galleryList = document.getElementById('gallery-list');
                     
                     companyData.gallery.forEach(imgUrl => {
-                        // Modificado para carrossel: min-w permite que não esmague e forme a rolagem
                         const imgHTML = `
-                            <a href="${imgUrl}" target="_blank" class="block min-w-[200px] md:min-w-[250px] aspect-square overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-shadow group border border-gray-100 snap-center">
+                            <a href="${imgUrl}" target="_blank" class="block min-w-[150px] md:min-w-[200px] aspect-square overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-shadow group border border-gray-100 snap-center">
                                 <img src="${imgUrl}" alt="Foto da Galeria" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                    <i data-lucide="zoom-in" class="text-white opacity-0 group-hover:opacity-100 w-8 h-8 transition-opacity"></i>
+                                </div>
                             </a>
                         `;
                         galleryList.insertAdjacentHTML('beforeend', imgHTML);
                     });
 
-                    // Lógica simples para os botões do carrossel (desktop)
+                    // Lógica das setas do carrossel
                     const scrollLeftBtn = document.getElementById('scroll-left');
                     const scrollRightBtn = document.getElementById('scroll-right');
-                    
                     if(scrollLeftBtn && scrollRightBtn) {
-                         scrollLeftBtn.addEventListener('click', () => {
-                             galleryList.scrollBy({ left: -250, behavior: 'smooth' });
-                         });
-                         scrollRightBtn.addEventListener('click', () => {
-                             galleryList.scrollBy({ left: 250, behavior: 'smooth' });
-                         });
+                         scrollLeftBtn.addEventListener('click', () => { galleryList.scrollBy({ left: -250, behavior: 'smooth' }); });
+                         scrollRightBtn.addEventListener('click', () => { galleryList.scrollBy({ left: 250, behavior: 'smooth' }); });
                     }
                 }
 
-                // Injetando Vídeos (se houver)
+                // 7. Verifica e injeta os Vídeos (YouTube)
                 if (companyData.videos && companyData.videos.length > 0) {
                     document.getElementById('videos-section').classList.remove('hidden');
                     const videosList = document.getElementById('videos-list');
                     
                     companyData.videos.forEach(videoUrl => {
                         const videoHTML = `
-                            <div class="aspect-video w-full rounded-xl overflow-hidden shadow-sm bg-gray-100 border border-gray-200">
-                                <iframe src="${videoUrl}" title="Vídeo da Empresa" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
+                            <div class="aspect-video w-full rounded-xl overflow-hidden shadow-md bg-black">
+                                <iframe src="${videoUrl}" title="Vídeo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
                             </div>
                         `;
                         videosList.insertAdjacentHTML('beforeend', videoHTML);
                     });
                 }
 
-                // Troca as telas
+                // Mostra a tela final
                 loadingDiv.classList.add('hidden');
                 contentDiv.classList.remove('hidden');
-                lucide.createIcons(); // Recarrega ícones novos
+                
+                // Renderiza os ícones do Lucide após inserir o HTML dinâmico
+                lucide.createIcons();
 
             } catch (error) {
-                console.error("Erro ao carregar:", error);
+                console.error("Erro ao carregar empresa:", error);
                 loadingDiv.classList.add('hidden');
                 errorDiv.classList.remove('hidden');
             }
         }
 
-        // Executa a função quando a página carregar
+        // Executa quando a página terminar de ler o HTML
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', loadCompanyData);
         } else {
@@ -401,7 +357,7 @@
         }
     </script>
 
-    <!-- Ativação dos ícones iniciais -->
+    <!-- Ativação dos ícones iniciais do header -->
     <script>
         lucide.createIcons();
     </script>
