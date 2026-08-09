@@ -101,15 +101,28 @@
                         </div>
                     </section>
 
-                    <!-- Galeria de Fotos -->
-                    <section id="gallery-section" class="hidden">
+                    <!-- Galeria de Fotos (Carrossel Horizontal) -->
+                    <section id="gallery-section" class="hidden relative">
                         <div class="flex items-center gap-2 mb-4">
                             <i data-lucide="image" class="w-6 h-6 text-[#FFC700]"></i>
                             <h2 class="text-xl font-bold text-[#021A3A]">Galeria de Fotos</h2>
                         </div>
                         
-                        <div id="gallery-list" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                            <!-- Fotos serão injetadas aqui via JS -->
+                        <!-- Container do Carrossel com scroll horizontal -->
+                        <div class="relative group">
+                            <!-- Botão Voltar (opcional, mas bom para usabilidade desktop) -->
+                            <button id="scroll-left" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-md z-10 hidden md:group-hover:flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
+                                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                            </button>
+
+                            <div id="gallery-list" class="flex overflow-x-auto gap-4 pb-4 snap-x hide-scrollbar scroll-smooth">
+                                <!-- Fotos serão injetadas aqui via JS -->
+                            </div>
+
+                            <!-- Botão Avançar -->
+                            <button id="scroll-right" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-md z-10 hidden md:group-hover:flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
+                                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                            </button>
                         </div>
                     </section>
 
@@ -194,7 +207,7 @@
                 status: "Aberto agora",
                 phone: "5564999999999", 
                 coverUrl: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop",
-                logoUrl: "https://placehold.co/150x150/112240/facc15?text=PP",
+                logoUrl: "https://i.postimg.cc/mZh4HnYp/LOGO-BLOG-fw.jpg", // Substituído pelo logo oficial postado!
                 coupons: [
                     { title: "15% OFF no Rodízio", rules: "Válido de Terça a Quinta", code: "PIRATA15" },
                     { title: "Sobremesa Grátis", rules: "Na compra de 1 Pizza G", code: "DOCEPIRATA" }
@@ -202,7 +215,9 @@
                 gallery: [
                     "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?q=80&w=500&auto=format&fit=crop",
                     "https://images.unsplash.com/photo-1590947132387-155cc02f3212?q=80&w=500&auto=format&fit=crop",
-                    "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=500&auto=format&fit=crop"
+                    "https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?q=80&w=500&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=500&auto=format&fit=crop",
+                    "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=500&auto=format&fit=crop"
                 ],
                 videos: [
                     "https://www.youtube.com/embed/5Peo-ivmupE?si=B5e0i_o5h5_A5z2O", // Link de 'incorporação' do YouTube (embed)
@@ -307,13 +322,27 @@
                     const galleryList = document.getElementById('gallery-list');
                     
                     companyData.gallery.forEach(imgUrl => {
+                        // Modificado para carrossel: min-w permite que não esmague e forme a rolagem
                         const imgHTML = `
-                            <a href="${imgUrl}" target="_blank" class="block aspect-square overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-shadow group border border-gray-100">
+                            <a href="${imgUrl}" target="_blank" class="block min-w-[200px] md:min-w-[250px] aspect-square overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-shadow group border border-gray-100 snap-center">
                                 <img src="${imgUrl}" alt="Foto da Galeria" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
                             </a>
                         `;
                         galleryList.insertAdjacentHTML('beforeend', imgHTML);
                     });
+
+                    // Lógica simples para os botões do carrossel (desktop)
+                    const scrollLeftBtn = document.getElementById('scroll-left');
+                    const scrollRightBtn = document.getElementById('scroll-right');
+                    
+                    if(scrollLeftBtn && scrollRightBtn) {
+                         scrollLeftBtn.addEventListener('click', () => {
+                             galleryList.scrollBy({ left: -250, behavior: 'smooth' });
+                         });
+                         scrollRightBtn.addEventListener('click', () => {
+                             galleryList.scrollBy({ left: 250, behavior: 'smooth' });
+                         });
+                    }
                 }
 
                 // Injetando Vídeos (se houver)
