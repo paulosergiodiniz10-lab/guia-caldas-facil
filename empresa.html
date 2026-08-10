@@ -66,13 +66,9 @@
         <div id="company-content" class="hidden">
             
             <!-- Banner de Capa -->
-            <div class="h-[250px] md:h-[350px] w-full relative bg-gray-200">
+            <div class="h-[250px] md:h-[400px] w-full relative bg-gray-200">
                 <img id="company-cover" src="" alt="Capa da Empresa" class="w-full h-full object-cover" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                
-                <div class="absolute bottom-4 left-4 md:left-8 z-10">
-                    <span id="company-category" class="bg-[#FFC700] text-[#021A3A] text-xs font-bold px-3 py-1 rounded shadow-md inline-block uppercase tracking-wider">Categoria</span>
-                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
             </div>
 
             <!-- Header Info (Logo "cortando" a linha e Texto em baixo) -->
@@ -85,9 +81,12 @@
                 <!-- O texto fica naturalmente na área branca com fonte escura -->
                 <div class="text-center md:text-left flex-1 pt-2 md:pt-4">
                     <h1 id="company-name" class="text-3xl md:text-4xl font-black text-[#021A3A] leading-tight mb-2">Nome da Empresa</h1>
-                    <div class="flex items-center justify-center md:justify-start gap-2 text-gray-800 bg-gray-100 border border-gray-200 px-4 py-1.5 rounded-full w-fit shadow-sm mx-auto md:mx-0">
-                        <i data-lucide="star" class="w-5 h-5 text-[#FFC700] fill-current"></i>
-                        <span id="company-rating" class="font-bold text-lg">5.0</span>
+                    <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-4">
+                        <div class="flex items-center justify-center md:justify-start gap-2 text-gray-800 bg-gray-100 border border-gray-200 px-4 py-1.5 rounded-full w-fit shadow-sm mx-auto md:mx-0">
+                            <i data-lucide="star" class="w-5 h-5 text-[#FFC700] fill-current"></i>
+                            <span id="company-rating" class="font-bold text-lg">5.0</span>
+                        </div>
+                        <span id="company-category" class="bg-[#FFC700] text-[#021A3A] text-xs font-bold px-3 py-1.5 rounded shadow-md inline-block uppercase tracking-wider mt-2 md:mt-0">Categoria</span>
                     </div>
                 </div>
             </div>
