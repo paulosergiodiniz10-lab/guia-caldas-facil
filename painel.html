@@ -11,217 +11,224 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-gray-100 font-sans min-h-screen flex flex-col">
+<body class="bg-gray-100 font-sans min-h-screen">
 
-    <header class="bg-[#021A3A] text-white py-4 px-6 flex justify-between items-center shadow-md sticky top-0 z-40">
-        <div class="flex items-center gap-3">
-            <i data-lucide="layout-dashboard" class="text-[#FFC700] w-7 h-7"></i>
-            <div>
-                <h1 class="font-bold text-xl leading-none">Painel Administrativo</h1>
-                <p class="text-[10px] text-gray-300">Guia Caldas Fácil</p>
-            </div>
-        </div>
-        <a href="index.html" class="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-            <i data-lucide="external-link" class="w-4 h-4"></i> <span class="hidden md:inline">Ver Site</span>
-        </a>
-    </header>
+    <div id="auth-loader" class="fixed inset-0 bg-[#021A3A] z-50 flex flex-col items-center justify-center text-white">
+        <i data-lucide="shield-check" class="w-16 h-16 text-[#FFC700] mb-4 animate-pulse"></i>
+        <h2 class="text-xl font-bold">Verificando segurança...</h2>
+    </div>
 
-    <main class="max-w-5xl mx-auto p-4 md:p-6 w-full flex-grow mb-12">
-        
-        <!-- Controles de Abas -->
-        <div class="flex gap-2 mb-6 bg-white p-2 rounded-xl shadow-sm border border-gray-200 overflow-x-auto hide-scrollbar">
-            <button id="btn-tab-form" onclick="switchTab('form')" class="flex-1 min-w-[200px] flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-[#021A3A] text-white font-bold transition-all shadow-md">
-                <i data-lucide="pen-tool" class="w-5 h-5"></i>
-                <span id="form-tab-title">Cadastrar / Editar</span>
-            </button>
-            <button id="btn-tab-list" onclick="switchTab('list')" class="flex-1 min-w-[200px] flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-gray-600 hover:bg-gray-100 font-bold transition-all">
-                <i data-lucide="list" class="w-5 h-5"></i>
-                <span>Lista de Empresas</span>
-            </button>
-        </div>
-
-        <!-- ABA: FORMULÁRIO -->
-        <div id="tab-form" class="bg-white rounded-xl shadow-md p-6 md:p-8 border border-gray-200 block">
-            
-            <div class="flex justify-between items-start mb-6 border-b pb-4">
+    <div id="app-content" class="hidden flex-col min-h-screen">
+        <header class="bg-[#021A3A] text-white py-4 px-6 flex justify-between items-center shadow-md sticky top-0 z-40">
+            <div class="flex items-center gap-3">
+                <i data-lucide="layout-dashboard" class="text-[#FFC700] w-7 h-7"></i>
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800" id="form-main-title">Nova Empresa</h2>
-                    <p class="text-gray-500 text-sm mt-1">Preencha os dados abaixo para cadastrar no sistema.</p>
+                    <h1 class="font-bold text-xl leading-none">Painel Administrativo</h1>
+                    <p class="text-[10px] text-gray-300">Guia Caldas Fácil</p>
                 </div>
-                <!-- Botão Limpar aparece ao editar -->
-                <button type="button" id="btn-clear-form" onclick="resetForm()" class="hidden bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors">
-                    <i data-lucide="plus-circle" class="w-4 h-4"></i> Novo Cadastro
+            </div>
+            <div class="flex items-center gap-2">
+                <a href="index.html" class="text-sm bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-colors flex items-center gap-2" title="Ver Site">
+                    <i data-lucide="external-link" class="w-4 h-4"></i> <span class="hidden md:inline">Ver Site</span>
+                </a>
+                <button onclick="logout()" class="text-sm bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg transition-colors flex items-center gap-2" title="Sair do Sistema">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> <span class="hidden md:inline">Sair</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="max-w-5xl mx-auto p-4 md:p-6 w-full flex-grow mb-12">
+            
+            <div class="flex gap-2 mb-6 bg-white p-2 rounded-xl shadow-sm border border-gray-200 overflow-x-auto hide-scrollbar">
+                <button id="btn-tab-form" onclick="switchTab('form')" class="flex-1 min-w-[200px] flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-[#021A3A] text-white font-bold transition-all shadow-md">
+                    <i data-lucide="pen-tool" class="w-5 h-5"></i>
+                    <span id="form-tab-title">Cadastrar / Editar</span>
+                </button>
+                <button id="btn-tab-list" onclick="switchTab('list')" class="flex-1 min-w-[200px] flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-gray-600 hover:bg-gray-100 font-bold transition-all">
+                    <i data-lucide="list" class="w-5 h-5"></i>
+                    <span>Lista de Empresas</span>
                 </button>
             </div>
 
-            <form id="admin-form" class="space-y-8">
+            <!-- ABA 1: FORMULÁRIO -->
+            <div id="tab-form" class="bg-white rounded-xl shadow-md p-6 md:p-8 border border-gray-200 block">
                 
-                <!-- Informações Básicas -->
-                <div class="space-y-4">
-                    <h3 class="font-bold text-lg text-blue-900 border-l-4 border-blue-500 pl-2">Informações Principais</h3>
-                    
-                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-4">
-                        <label class="block text-sm font-bold text-[#021A3A] mb-1"><i data-lucide="layout" class="inline w-4 h-4 mr-1"></i> Posição da Empresa no Site (Layout)*</label>
-                        <select id="compDisplay" required class="w-full border border-blue-300 rounded-lg p-3 outline-none focus:border-blue-600 bg-white font-medium text-gray-700 shadow-sm cursor-pointer">
-                            <option value="carousel">Card Padrão (Carrossel de Destaques)</option>
-                            <option value="banner">Super Banner Premium (Ocupa a largura toda)</option>
-                        </select>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">ID da Empresa (URL)*</label>
-                            <input type="text" id="compId" required placeholder="ex: empresa-exemplo" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed">
-                            <p class="text-[11px] text-gray-500 mt-1">O ID fica bloqueado durante a edição.</p>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Nome da Empresa*</label>
-                            <input type="text" id="compName" required placeholder="Ex: Empresa Exemplo" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Categoria*</label>
-                            <input type="text" id="compCat" required placeholder="Ex: Gastronomia, Hotel..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Nota (Estrelas)</label>
-                            <input type="text" id="compRating" placeholder="Ex: 4.8" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                        </div>
-                    </div>
-
+                <div class="flex justify-between items-start mb-6 border-b pb-4">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Descrição Breve*</label>
-                        <textarea id="compDesc" required rows="3" placeholder="Fale um pouco sobre a empresa (Pode usar a tecla Enter para pular linha)..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
+                        <h2 class="text-2xl font-bold text-gray-800" id="form-main-title">Nova Empresa</h2>
+                        <p class="text-gray-500 text-sm mt-1">Preencha os dados abaixo para cadastrar no sistema.</p>
                     </div>
+                    <button type="button" id="btn-clear-form" onclick="resetForm()" class="hidden bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-bold py-2 px-4 rounded-lg flex items-center gap-2 transition-colors">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i> Novo Cadastro
+                    </button>
+                </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Endereço</label>
-                            <input type="text" id="compAddress" placeholder="Rua, Número - Bairro, Cidade" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Link do Google Maps</label>
-                            <input type="text" id="compMap" placeholder="https://maps.app.goo.gl/..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Telefone / WhatsApp</label>
-                            <input type="text" id="compPhone" placeholder="Apenas números (ex: 5564999999999)" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Status / Horário</label>
-                            <textarea id="compStatus" rows="2" placeholder="Ex: Aberto agora" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
-                        </div>
-                    </div>
+                <form id="admin-form" class="space-y-8">
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1"><i data-lucide="globe" class="inline w-4 h-4 mr-1"></i> Site</label>
-                            <input type="text" id="compSite" placeholder="https://www.site.com.br" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-lg text-blue-900 border-l-4 border-blue-500 pl-2">Informações Principais</h3>
+                        
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-4">
+                            <label class="block text-sm font-bold text-[#021A3A] mb-1"><i data-lucide="layout" class="inline w-4 h-4 mr-1"></i> Posição da Empresa no Site (Layout)*</label>
+                            <select id="compDisplay" required class="w-full border border-blue-300 rounded-lg p-3 outline-none focus:border-blue-600 bg-white font-medium text-gray-700 shadow-sm cursor-pointer">
+                                <option value="carousel">Card Padrão (Carrossel de Destaques)</option>
+                                <option value="banner">Super Banner Premium (Ocupa a largura toda)</option>
+                            </select>
                         </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1"><i data-lucide="instagram" class="inline w-4 h-4 mr-1"></i> Instagram</label>
-                            <input type="text" id="compInsta" placeholder="https://instagram.com/perfil" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">ID da Empresa (URL)*</label>
+                                <input type="text" id="compId" required placeholder="ex: empresa-exemplo" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 disabled:bg-gray-100 disabled:text-gray-500 disabled:cursor-not-allowed">
+                                <p class="text-[11px] text-gray-500 mt-1">O ID fica bloqueado durante a edição.</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Nome da Empresa*</label>
+                                <input type="text" id="compName" required placeholder="Ex: Empresa Exemplo" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                            </div>
                         </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Categoria*</label>
+                                <input type="text" id="compCat" required placeholder="Ex: Gastronomia, Hotel..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Nota (Estrelas)</label>
+                                <input type="text" id="compRating" placeholder="Ex: 4.8" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+
                         <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1"><i data-lucide="facebook" class="inline w-4 h-4 mr-1"></i> Facebook</label>
-                            <input type="text" id="compFace" placeholder="https://facebook.com/pagina" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Descrição Breve*</label>
+                            <textarea id="compDesc" required rows="3" placeholder="Fale um pouco sobre a empresa (Pode usar a tecla Enter para pular linha)..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Endereço</label>
+                                <input type="text" id="compAddress" placeholder="Rua, Número - Bairro, Cidade" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Link do Google Maps</label>
+                                <input type="text" id="compMap" placeholder="https://maps.app.goo.gl/..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Telefone / WhatsApp</label>
+                                <input type="text" id="compPhone" placeholder="Apenas números (ex: 5564999999999)" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Status / Horário</label>
+                                <textarea id="compStatus" rows="2" placeholder="Ex: Aberto agora" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1"><i data-lucide="globe" class="inline w-4 h-4 mr-1"></i> Site</label>
+                                <input type="text" id="compSite" placeholder="https://www.site.com.br" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1"><i data-lucide="instagram" class="inline w-4 h-4 mr-1"></i> Instagram</label>
+                                <input type="text" id="compInsta" placeholder="https://instagram.com/perfil" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1"><i data-lucide="facebook" class="inline w-4 h-4 mr-1"></i> Facebook</label>
+                                <input type="text" id="compFace" placeholder="https://facebook.com/pagina" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="space-y-4">
-                    <h3 class="font-bold text-lg text-purple-700 border-l-4 border-purple-500 pl-2">Fotos e Vídeos</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-purple-50 rounded-lg border border-purple-100">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Link da Logo (Quadrada)</label>
-                            <input type="text" id="compLogo" placeholder="https://link.com/logo.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-purple-500">
+                    <div class="space-y-4">
+                        <h3 class="font-bold text-lg text-purple-700 border-l-4 border-purple-500 pl-2">Fotos e Vídeos</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-purple-50 rounded-lg border border-purple-100">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Link da Logo (Quadrada)</label>
+                                <input type="text" id="compLogo" placeholder="https://link.com/logo.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-purple-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Link da Capa (Paisagem)</label>
+                                <input type="text" id="compCover" placeholder="https://link.com/capa.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-purple-500">
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Link da Capa (Paisagem)</label>
-                            <input type="text" id="compCover" placeholder="https://link.com/capa.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-purple-500">
+                        <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Galeria (Links separados por vírgula)</label>
+                                <textarea id="compGallery" rows="2" placeholder="link1.jpg, link2.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Vídeos do YouTube (Links separados por vírgula)</label>
+                                <textarea id="compVideos" rows="2" placeholder="https://youtube.com/... , https://youtu.be/..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
+                            </div>
                         </div>
                     </div>
-                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-4">
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Galeria (Links separados por vírgula)</label>
-                            <textarea id="compGallery" rows="2" placeholder="link1.jpg, link2.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-bold text-gray-700 mb-1">Vídeos do YouTube (Links separados por vírgula)</label>
-                            <textarea id="compVideos" rows="2" placeholder="https://youtube.com/... , https://youtu.be/..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
+
+                    <div class="space-y-4 p-4 bg-red-50 rounded-lg border border-red-100">
+                        <h3 class="font-bold text-red-800 flex items-center gap-2"><i data-lucide="percent" class="w-5 h-5"></i> Cupom (Opcional)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm text-gray-700 mb-1">Título</label>
+                                <input type="text" id="couponTitle" placeholder="Ex: 15% OFF" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-700 mb-1">Código</label>
+                                <input type="text" id="couponCode" placeholder="Ex: PROMO15" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm text-gray-700 mb-1">Regras</label>
+                                <input type="text" id="couponRules" placeholder="Ex: Válido até sexta" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="space-y-4 p-4 bg-red-50 rounded-lg border border-red-100">
-                    <h3 class="font-bold text-red-800 flex items-center gap-2"><i data-lucide="percent" class="w-5 h-5"></i> Cupom (Opcional)</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-700 mb-1">Título</label>
-                            <input type="text" id="couponTitle" placeholder="Ex: 15% OFF" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-700 mb-1">Código</label>
-                            <input type="text" id="couponCode" placeholder="Ex: PROMO15" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm text-gray-700 mb-1">Regras</label>
-                            <input type="text" id="couponRules" placeholder="Ex: Válido até sexta" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
-                        </div>
-                    </div>
-                </div>
-
-                <button type="submit" id="save-btn" class="w-full bg-[#021A3A] hover:bg-blue-900 text-white font-bold py-4 rounded-lg flex items-center justify-center gap-2 transition-colors text-lg shadow-lg">
-                    <i data-lucide="save" class="w-5 h-5"></i> Salvar no Banco de Dados
-                </button>
-                <div id="status-msg" class="hidden text-center font-bold p-3 rounded-lg mt-4"></div>
-            </form>
-        </div>
-
-        <!-- ABA: LISTA DE EMPRESAS -->
-        <div id="tab-list" class="hidden bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
-            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                <div>
-                    <h2 class="text-2xl font-bold text-gray-800">Empresas Cadastradas</h2>
-                    <p class="text-gray-500 text-sm mt-1" id="list-count">Carregando...</p>
-                </div>
-                <button onclick="loadCompanies()" class="bg-white border border-gray-200 p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors shadow-sm" title="Atualizar Lista">
-                    <i data-lucide="refresh-cw" class="w-5 h-5"></i>
-                </button>
+                    <button type="submit" id="save-btn" class="w-full bg-[#021A3A] hover:bg-blue-900 text-white font-bold py-4 rounded-lg flex items-center justify-center gap-2 transition-colors text-lg shadow-lg">
+                        <i data-lucide="save" class="w-5 h-5"></i> Salvar no Banco de Dados
+                    </button>
+                    <div id="status-msg" class="hidden text-center font-bold p-3 rounded-lg mt-4"></div>
+                </form>
             </div>
-            
-            <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="bg-gray-100 text-gray-600 text-sm uppercase tracking-wider">
-                            <th class="p-4 font-bold">Empresa</th>
-                            <th class="p-4 font-bold">Categoria</th>
-                            <th class="p-4 font-bold">Layout</th>
-                            <th class="p-4 font-bold text-center">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="companies-table-body" class="divide-y divide-gray-100">
-                        <!-- Carregando state -->
-                        <tr>
-                            <td colspan="4" class="p-8 text-center text-gray-500">
-                                <div class="flex flex-col items-center justify-center">
-                                    <i data-lucide="loader-2" class="w-8 h-8 animate-spin mb-2 text-blue-600"></i>
-                                    <p>Buscando no banco de dados...</p>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </main>
 
-    <!-- MODAL CUSTOMIZADO (Para não usar alert feio) -->
+            <!-- ABA 2: LISTA DE EMPRESAS -->
+            <div id="tab-list" class="hidden bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+                <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Empresas Cadastradas</h2>
+                        <p class="text-gray-500 text-sm mt-1" id="list-count">Carregando...</p>
+                    </div>
+                    <button onclick="loadCompanies()" class="bg-white border border-gray-200 p-2 rounded-lg text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition-colors shadow-sm" title="Atualizar Lista">
+                        <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100 text-gray-600 text-sm uppercase tracking-wider">
+                                <th class="p-4 font-bold">Empresa</th>
+                                <th class="p-4 font-bold">Categoria</th>
+                                <th class="p-4 font-bold">Layout</th>
+                                <th class="p-4 font-bold text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="companies-table-body" class="divide-y divide-gray-100">
+                            <tr>
+                                <td colspan="4" class="p-8 text-center text-gray-500">
+                                    <div class="flex flex-col items-center justify-center">
+                                        <i data-lucide="loader-2" class="w-8 h-8 animate-spin mb-2 text-blue-600"></i>
+                                        <p>Buscando no banco de dados...</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
     <div id="delete-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center px-4">
         <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-md transform transition-all scale-100">
             <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4 text-red-600">
@@ -245,8 +252,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, doc, setDoc, getDocs, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-        // SUAS CHAVES DO FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyDCrdkV7_A3kUdvfOEfkpYhUZgfzEhEAfM",
             authDomain: "guia-caldas-facil.firebaseapp.com",
@@ -257,8 +264,40 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
 
-        // Variáveis globais para gerenciar os dados
+        // PROTEÇÃO: Expulsa se não estiver logado
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                try {
+                    window.location.href = 'login.html';
+                } catch (err) {
+                    // Trata o erro do ambiente de Preview
+                    const loader = document.getElementById('auth-loader');
+                    loader.innerHTML = `
+                        <i data-lucide="lock" class="w-16 h-16 text-red-500 mb-4"></i>
+                        <h2 class="text-xl font-bold">Acesso Bloqueado</h2>
+                        <p class="text-gray-400 mt-2 text-center max-w-sm">Você precisa fazer login. No ambiente de Preview, mude para o arquivo <b>login.html</b> manualmente no menu esquerdo.</p>
+                    `;
+                    lucide.createIcons();
+                }
+            } else {
+                document.getElementById('auth-loader').classList.add('hidden');
+                document.getElementById('app-content').classList.remove('hidden');
+                document.getElementById('app-content').classList.add('flex');
+            }
+        });
+
+        window.logout = () => {
+            signOut(auth).then(() => {
+                try {
+                    window.location.href = 'login.html';
+                } catch (err) {
+                    window.location.reload(); // Fallback no preview
+                }
+            });
+        };
+
         window.companiesData = {}; 
         let companyIdToDelete = null;
 
@@ -267,7 +306,6 @@
         const statusMsg = document.getElementById('status-msg');
         const tbody = document.getElementById('companies-table-body');
 
-        // Mudar entre abas
         window.switchTab = (tabName) => {
             document.getElementById('tab-form').classList.add('hidden');
             document.getElementById('tab-list').classList.add('hidden');
@@ -282,11 +320,10 @@
             } else {
                 btnList.className = "flex-1 min-w-[200px] flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-[#021A3A] text-white font-bold transition-all shadow-md";
                 btnForm.className = "flex-1 min-w-[200px] flex items-center justify-center gap-2 py-3 px-4 rounded-lg text-gray-600 hover:bg-gray-100 font-bold transition-all";
-                loadCompanies(); // Atualiza a lista sempre que a aba for aberta
+                loadCompanies();
             }
         };
 
-        // Limpar o formulário (Novo Cadastro)
         window.resetForm = () => {
             form.reset();
             document.getElementById('compId').disabled = false;
@@ -297,14 +334,13 @@
             lucide.createIcons();
         };
 
-        // Buscar empresas no Firebase
         window.loadCompanies = async () => {
             tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-gray-500"><i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-blue-600"></i><p>Carregando...</p></td></tr>`;
             lucide.createIcons();
             
             try {
                 const querySnapshot = await getDocs(collection(db, "empresas"));
-                window.companiesData = {}; // Zera o cache local
+                window.companiesData = {};
                 let html = '';
                 
                 if (querySnapshot.empty) {
@@ -313,7 +349,7 @@
                     querySnapshot.forEach((docSnap) => {
                         const data = docSnap.data();
                         const id = docSnap.id;
-                        window.companiesData[id] = data; // Salva localmente para não gastar leituras ao editar
+                        window.companiesData[id] = data;
                         
                         const logo = data.logoUrl || 'https://placehold.co/100x100/gray/white?text=Logo';
                         const layoutBadge = data.displayType === 'banner' 
@@ -354,22 +390,19 @@
             }
         };
 
-        // Preencher form para Editar
         window.editCompany = (id) => {
             const data = window.companiesData[id];
             if(!data) return;
 
-            // Muda o visual
             switchTab('form');
             document.getElementById('form-main-title').textContent = `Editando: ${data.name}`;
             document.getElementById('btn-clear-form').classList.remove('hidden');
             btnSave.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Atualizar Cadastro`;
             statusMsg.classList.add('hidden');
 
-            // Preenche os campos
             const compIdField = document.getElementById('compId');
             compIdField.value = id;
-            compIdField.disabled = true; // Impede alteração do ID
+            compIdField.disabled = true;
 
             document.getElementById('compDisplay').value = data.displayType || 'carousel';
             document.getElementById('compName').value = data.name || '';
@@ -389,7 +422,6 @@
             document.getElementById('compGallery').value = (data.gallery && data.gallery.length > 0) ? data.gallery.join(', ') : '';
             document.getElementById('compVideos').value = (data.videos && data.videos.length > 0) ? data.videos.join(', ') : '';
 
-            // Limpa o cupom antes
             document.getElementById('couponTitle').value = '';
             document.getElementById('couponCode').value = '';
             document.getElementById('couponRules').value = '';
@@ -402,7 +434,6 @@
             window.scrollTo(0, 0);
         };
 
-        // Modal de Exclusão
         window.openDeleteModal = (id, name) => {
             companyIdToDelete = id;
             document.getElementById('del-company-name').textContent = name;
@@ -414,7 +445,6 @@
             document.getElementById('delete-modal').classList.add('hidden');
         };
 
-        // Ação de Excluir do Banco
         document.getElementById('confirm-del-btn').addEventListener('click', async () => {
             if(!companyIdToDelete) return;
             const btn = document.getElementById('confirm-del-btn');
@@ -424,10 +454,9 @@
             try {
                 await deleteDoc(doc(db, "empresas", companyIdToDelete));
                 closeDeleteModal();
-                loadCompanies(); // Recarrega a lista
+                loadCompanies();
             } catch (error) {
                 console.error("Erro ao excluir:", error);
-                alert("Falha ao excluir a empresa. Veja o console.");
             } finally {
                 btn.innerHTML = `<i data-lucide="trash-2" class="w-5 h-5"></i> Excluir`;
                 btn.disabled = false;
@@ -441,10 +470,8 @@
             btnSave.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Salvando...`;
             btnSave.disabled = true;
             
-            // O ID pode estar desabilitado (se for edição). Precisamos pegar o valor assim:
             let compIdInput = document.getElementById('compId');
             let compId = compIdInput.value;
-            // Padroniza a URL ID
             compId = compId.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
 
             const rawGallery = document.getElementById('compGallery').value;
@@ -489,10 +516,9 @@
                 statusMsg.textContent = "✅ Salvo com sucesso!";
                 statusMsg.className = "text-green-700 bg-green-100 font-bold p-3 rounded-lg mt-4 block text-center";
                 
-                // Se foi um novo cadastro, limpa form. Se foi edição, mantém para a pessoa conferir.
                 if(!compIdInput.disabled) {
                     resetForm();
-                    statusMsg.classList.remove('hidden'); // Mostra a mensagem mesmo após resetar
+                    statusMsg.classList.remove('hidden'); 
                     setTimeout(() => statusMsg.classList.add('hidden'), 3000);
                 } else {
                     btnSave.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Atualizar Cadastro`;
