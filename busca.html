@@ -1,1 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Empresas - Guia Caldas Fácil</title>
 
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Configuração de Tema do Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            navy: '#021A3A',
+                            yellow: '#FFC700',
+                            green: '#238833',
+                            red: '#B91C1C'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+    <header class="bg-brand-navy text-white py-3 px-4 md:px-8 flex justify-between items-center sticky top-0 z-50 shadow-md">
+        <a href="index.html" class="flex items-center gap-2 cursor-pointer group">
+            <i data-lucide="map-pin" class="text-brand-yellow w-8 h-8 group-hover:scale-110 transition-transform"></i>
+            <div>
+                <h1 class="font-bold text-xl md:text-2xl leading-none flex gap-1">
+                    GUIA <span class="text-brand-yellow">CALDAS FÁCIL</span>
+                </h1>
+                <p class="text-[10px] md:text-xs text-gray-300">Catálogo Comercial & Buscador</p>
+            </div>
+        </a>
+        
+        <div class="flex items-center gap-3 md:gap-4">
+            <a href="index.html" class="text-sm bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 font-medium">
+                <i data-lucide="home" class="w-4 h-4"></i> <span class="hidden sm:inline">Início</span>
+            </a>
+            <a href="painel.html" class="bg-brand-yellow text-brand-navy font-bold py-2 px-4 rounded-lg flex items-center gap-2 hover:bg-yellow-400 transition-colors shadow-md text-sm">
+                <i data-lucide="megaphone" class="w-4 h-4 hidden sm:block"></i>
+                <span>Anuncie Conosco</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- BARRA DE BUSCA E FILTROS DO CATÁLOGO -->
+    <section class="bg-brand-navy border-t border-blue-900/50 py-8 px-4 text-white shadow-inner">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 text-white">
+                Catálogo de Empresas e Serviços
+            </h2>
+
+            <form id="search-form" class="bg-white p-3 md:p-4 rounded-2xl shadow-xl text-gray-800 grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div class="flex items-center border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-green transition-all">
+                    <i data-lucide="search" class="w-5 h-5 text-gray-400 mr-2 shrink-0"></i>
+                    <input type="text" id="filter-keyword" placeholder="O que procura? (ex: pizza, hotel)..." class="w-full bg-transparent outline-none text-sm text-gray-800 placeholder-gray-400 font-medium" />
+                </div>
+
+                <div class="flex items-center border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 focus-within:bg-white focus-within:ring-2 focus-within:ring-brand-green transition-all">
+                    <i data-lucide="grid" class="w-5 h-5 text-gray-400 mr-2 shrink-0"></i>
+                    <input type="text" id="filter-category" placeholder="Filtrar Categoria (ex: Gastronomia)..." class="w-full bg-transparent outline-none text-sm text-gray-800 placeholder-gray-400 font-medium" />
+                </div>
+
+                <div class="flex gap-2">
+                    <button type="submit" class="flex-1 bg-brand-green hover:bg-green-700 text-white font-bold py-2.5 px-6 rounded-xl transition-colors shadow-lg flex items-center justify-center gap-2">
+                        <i data-lucide="filter" class="w-4 h-4"></i> Filtrar
+                    </button>
+                    <button type="button" id="btn-reset-filter" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold p-2.5 rounded-xl transition-colors" title="Limpar Filtros">
+                        <i data-lucide="rotate-ccw" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- MAIN RESULTS CONTAINER -->
+    <main class="max-w-6xl mx-auto px-4 py-8 flex-grow w-full">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-2">
+            <div>
+                <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                    <i data-lucide="building-2" class="w-6 h-6 text-brand-navy"></i>
+                    Empresas Encontradas
+                </h3>
+                <p id="results-count" class="text-xs text-gray-500 mt-0.5">Buscando empresas no catálogo...</p>
+            </div>
+            
+            <span class="text-xs text-gray-500 bg-white border border-gray-200 px-3 py-1.5 rounded-full font-medium shadow-sm">
+                💡 Anúncios grátis exibem contato básico sem link.
+            </span>
+        </div>
+
+        <!-- GRID DE CARDS DO CATÁLOGO -->
+        <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Loading Spinner -->
+            <div class="col-span-full py-16 flex flex-col items-center justify-center text-gray-400">
+                <i data-lucide="loader-2" class="w-10 h-10 animate-spin mb-3 text-brand-navy"></i>
+                <p class="font-medium text-gray-600">Carregando catálogo...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-navy text-gray-400 text-xs py-6 px-4 border-t border-blue-900 mt-auto">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2 font-bold text-white">
+                <i data-lucide="map-pin" class="w-4 h-4 text-brand-yellow"></i> Guia Caldas Fácil
+            </div>
+            <div>
+                © 2026 Guia Caldas Fácil. Todos os direitos reservados.
+            </div>
+            <div>
+                Catálogo Comercial de Caldas Novas
+            </div>
+        </div>
+    </footer>
+
+    <!-- FIREBASE MODULE SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCrdkV7_A3kUdvfOEfkpYhUZgfzEhEAfM",
+            authDomain: "guia-caldas-facil.firebaseapp.com",
+            projectId: "guia-caldas-facil",
+            storageBucket: "guia-caldas-facil.firebasestorage.app",
+            messagingSenderId: "46826988375",
+            appId: "1:46826988375:web:64a22b576e24c181d1d412"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let allCompanies = [];
+
+        async function fetchCompanies() {
+            const grid = document.getElementById('catalog-grid');
+            const countLabel = document.getElementById('results-count');
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "empresas"));
+                allCompanies = [];
+
+                querySnapshot.forEach((doc) => {
+                    allCompanies.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                // Ler filtros iniciais da URL (ex: ?q=pizza ou ?cat=gastronomia)
+                const urlParams = new URLSearchParams(window.location.search);
+                const queryQ = urlParams.get('q') || '';
+                const queryCat = urlParams.get('cat') || '';
+
+                if (queryQ) document.getElementById('filter-keyword').value = queryQ;
+                if (queryCat) document.getElementById('filter-category').value = queryCat;
+
+                renderCompanies();
+
+            } catch (error) {
+                console.error("Erro ao carregar catálogo:", error);
+                grid.innerHTML = `
+                    <div class="col-span-full bg-red-50 border border-red-200 text-red-700 p-8 rounded-2xl text-center">
+                        <i data-lucide="alert-triangle" class="w-10 h-10 mx-auto mb-2 text-red-500"></i>
+                        <p class="font-bold">Erro ao carregar o catálogo de empresas.</p>
+                        <p class="text-sm mt-1">Por favor, recarregue a página.</p>
+                    </div>
+                `;
+                countLabel.textContent = "Erro de conexão";
+                lucide.createIcons();
+            }
+        }
+
+        function renderCompanies() {
+            const grid = document.getElementById('catalog-grid');
+            const countLabel = document.getElementById('results-count');
+
+            const keyword = document.getElementById('filter-keyword').value.toLowerCase().trim();
+            const category = document.getElementById('filter-category').value.toLowerCase().trim();
+
+            const filtered = allCompanies.filter(comp => {
+                const nameMatch = (comp.name || '').toLowerCase().includes(keyword) || 
+                                  (comp.description || '').toLowerCase().includes(keyword) ||
+                                  (comp.category || '').toLowerCase().includes(keyword);
+                
+                const catMatch = !category || (comp.category || '').toLowerCase().includes(category);
+
+                return nameMatch && catMatch;
+            });
+
+            countLabel.textContent = `Mostrando ${filtered.length} empresa(s)`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white border border-dashed border-gray-300 p-12 rounded-2xl text-center text-gray-500">
+                        <i data-lucide="search-x" class="w-12 h-12 mx-auto mb-3 text-gray-300"></i>
+                        <h4 class="font-bold text-lg text-gray-700">Nenhuma empresa encontrada</h4>
+                        <p class="text-sm text-gray-400 mt-1">Tente buscar por outros termos ou limpar os filtros.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            let html = '';
+
+            filtered.forEach(comp => {
+                const logo = comp.logoUrl || 'https://placehold.co/200x200/021A3A/FFFFFF?text=Logo';
+                const name = comp.name || 'Empresa Sem Nome';
+                const cat = comp.category || 'Geral';
+                const isFree = (comp.displayType === 'free');
+                const phone = comp.phone || 'Não informado';
+                const rawPhone = phone.replace(/\D/g, '');
+
+                if (isFree) {
+                    // ==========================================
+                    // CARD ANÚNCIO GRÁTIS (REGRAS DE NEGÓCIO):
+                    // - Sem link para o perfil
+                    // - WhatsApp apenas em TEXTO
+                    // ==========================================
+                    html += `
+                        <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-200 p-5 flex flex-col justify-between relative overflow-hidden group">
+                            <div class="absolute top-3 right-3 bg-gray-100 text-gray-600 border border-gray-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase">
+                                🆓 Grátis
+                            </div>
+
+                            <div>
+                                <div class="flex items-center gap-4 mb-4">
+                                    <img src="${logo}" alt="${name}" class="w-16 h-16 rounded-xl object-cover border border-gray-200 shrink-0 bg-gray-50" onerror="this.src='https://placehold.co/200x200/gray/white?text=Logo'"/>
+                                    <div>
+                                        <span class="text-xs font-bold text-brand-navy uppercase tracking-wider block">${cat}</span>
+                                        <h4 class="font-bold text-gray-900 text-lg leading-tight mt-0.5">${name}</h4>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 line-clamp-2 mb-4 font-medium">${comp.description || 'Anúncio simplificado no catálogo do Guia Caldas Fácil.'}</p>
+                            </div>
+
+                            <div class="pt-3 border-t border-gray-100 bg-gray-50 -mx-5 -mb-5 p-4 rounded-b-2xl mt-2">
+                                <div class="flex items-center gap-2 text-xs text-gray-700 font-bold">
+                                    <i data-lucide="phone" class="w-4 h-4 text-gray-400"></i>
+                                    <span>Contato: ${phone}</span>
+                                </div>
+                                <p class="text-[10px] text-gray-400 mt-1 italic">Anúncio básico (sem página externa de perfil).</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // ==========================================
+                    // CARD PLANO PAGO (Básico, Card Padrão ou Super Banner):
+                    // - Possui link completo para empresa.html
+                    // - Botão direto de WhatsApp clicável
+                    // ==========================================
+                    const rating = comp.rating || '5.0';
+                    const cover = comp.coverUrl || 'https://placehold.co/600x300/021A3A/FFFFFF?text=Caldas+Novas';
+
+                    html += `
+                        <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 border border-gray-200 overflow-hidden flex flex-col justify-between group">
+                            <div>
+                                <!-- Capa com Badges -->
+                                <div class="h-32 w-full relative bg-gray-100 overflow-hidden">
+                                    <img src="${cover}" alt="${name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/600x300/gray/white?text=Capa'"/>
+                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                    
+                                    <span class="absolute top-3 left-3 bg-brand-yellow text-brand-navy text-[10px] font-bold px-2.5 py-1 rounded-md shadow uppercase tracking-wider">
+                                        ${cat}
+                                    </span>
+                                    
+                                    <div class="absolute bottom-2 right-3 flex items-center gap-1 bg-black/60 backdrop-blur-sm text-white px-2 py-0.5 rounded text-xs font-bold">
+                                        <i data-lucide="star" class="w-3.5 h-3.5 text-brand-yellow fill-current"></i>
+                                        <span>${rating}</span>
+                                    </div>
+                                </div>
+
+                                <!-- Logo e Título -->
+                                <div class="p-5 pb-3">
+                                    <div class="flex items-start gap-3 mb-2">
+                                        <img src="${logo}" alt="${name}" class="w-12 h-12 rounded-lg object-cover border-2 border-white shadow-md -mt-8 relative z-10 shrink-0 bg-white" onerror="this.src='https://placehold.co/200x200/gray/white?text=Logo'"/>
+                                        <h4 class="font-bold text-gray-900 text-lg leading-snug">${name}</h4>
+                                    </div>
+                                    <p class="text-xs text-gray-600 line-clamp-2 leading-relaxed mb-3">${comp.description || ''}</p>
+                                </div>
+                            </div>
+
+                            <!-- Botões de Ação para Anúncios Pagos -->
+                            <div class="p-5 pt-0 space-y-2">
+                                ${rawPhone ? `
+                                    <a href="https://wa.me/${rawPhone}" target="_blank" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors shadow-sm">
+                                        <i data-lucide="message-circle" class="w-4 h-4"></i> WhatsApp Direto
+                                    </a>
+                                ` : ''}
+
+                                <a href="empresa.html?id=${comp.id}" class="w-full bg-brand-navy hover:bg-blue-900 text-white font-bold py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors shadow">
+                                    <span>Ver Perfil Completo</span>
+                                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            grid.innerHTML = html;
+            setTimeout(() => lucide.createIcons(), 50);
+        }
+
+        // Listeners de busca
+        document.getElementById('search-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            renderCompanies();
+        });
+
+        document.getElementById('btn-reset-filter').addEventListener('click', () => {
+            document.getElementById('filter-keyword').value = '';
+            document.getElementById('filter-category').value = '';
+            renderCompanies();
+        });
+
+        // Inicializar busca
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', fetchCompanies);
+        } else {
+            fetchCompanies();
+        }
+    </script>
+</body>
+</html>
+```
+
+### O que fazer no GitHub:
+1. Crie o novo arquivo chamado **`busca.html`** no repositório.
+2. Cole todo o código acima nele e clique em **Commit changes**.
+3. Em seguida, me confirme para gerarmos a **`index.html`** atualizada com o link direcionando direto para a busca!
