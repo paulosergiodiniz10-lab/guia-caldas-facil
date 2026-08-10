@@ -50,7 +50,6 @@
                 </button>
             </div>
 
-            <!-- ABA 1: FORMULÁRIO -->
             <div id="tab-form" class="bg-white rounded-xl shadow-md p-6 md:p-8 border border-gray-200 block">
                 
                 <div class="flex justify-between items-start mb-6 border-b pb-4">
@@ -66,14 +65,21 @@
                 <form id="admin-form" class="space-y-8">
                     
                     <div class="space-y-4">
-                        <h3 class="font-bold text-lg text-blue-900 border-l-4 border-blue-500 pl-2">Informações Principais</h3>
+                        <h3 class="font-bold text-lg text-blue-900 border-l-4 border-blue-500 pl-2">Plano e Visibilidade</h3>
                         
                         <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mb-4">
-                            <label class="block text-sm font-bold text-[#021A3A] mb-1"><i data-lucide="layout" class="inline w-4 h-4 mr-1"></i> Posição da Empresa no Site (Layout)*</label>
+                            <label class="block text-sm font-bold text-[#021A3A] mb-1">
+                                <i data-lucide="award" class="inline w-4 h-4 mr-1 text-amber-500"></i> Plano de Anúncio da Empresa*
+                            </label>
                             <select id="compDisplay" required class="w-full border border-blue-300 rounded-lg p-3 outline-none focus:border-blue-600 bg-white font-medium text-gray-700 shadow-sm cursor-pointer">
-                                <option value="carousel">Card Padrão (Carrossel de Destaques)</option>
-                                <option value="banner">Super Banner Premium (Ocupa a largura toda)</option>
+                                <option value="free">🆓 Anúncio Grátis (Apenas Busca/Catálogo | Sem Link p/ Perfil)</option>
+                                <option value="basic">🔹 Plano Básico (Busca/Catálogo + Perfil Completo)</option>
+                                <option value="carousel">⭐ Card Padrão (Destaque na Home + Busca + Perfil)</option>
+                                <option value="banner">👑 Super Banner Premium (Destaque Gigante na Home + Busca + Perfil)</option>
                             </select>
+                            <p class="text-xs text-gray-500 mt-2">
+                                <strong>Nota:</strong> Anúncios Grátis aparecem apenas no catálogo de buscas, sem link para perfil externo.
+                            </p>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -90,8 +96,8 @@
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 mb-1">Categoria*</label>
-                                <input type="text" id="compCat" required placeholder="Ex: Gastronomia, Hotel..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Categoria / Segmento*</label>
+                                <input type="text" id="compCat" required placeholder="Ex: Gastronomia, Hotel, Serviços..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
                             </div>
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 mb-1">Nota (Estrelas)</label>
@@ -191,7 +197,6 @@
                 </form>
             </div>
 
-            <!-- ABA 2: LISTA DE EMPRESAS -->
             <div id="tab-list" class="hidden bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
                 <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
                     <div>
@@ -209,7 +214,7 @@
                             <tr class="bg-gray-100 text-gray-600 text-sm uppercase tracking-wider">
                                 <th class="p-4 font-bold">Empresa</th>
                                 <th class="p-4 font-bold">Categoria</th>
-                                <th class="p-4 font-bold">Layout</th>
+                                <th class="p-4 font-bold">Plano</th>
                                 <th class="p-4 font-bold text-center">Ações</th>
                             </tr>
                         </thead>
@@ -266,18 +271,16 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // PROTEÇÃO: Expulsa se não estiver logado
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 try {
                     window.location.href = 'login.html';
                 } catch (err) {
-                    // Trata o erro do ambiente de Preview
                     const loader = document.getElementById('auth-loader');
                     loader.innerHTML = `
                         <i data-lucide="lock" class="w-16 h-16 text-red-500 mb-4"></i>
                         <h2 class="text-xl font-bold">Acesso Bloqueado</h2>
-                        <p class="text-gray-400 mt-2 text-center max-w-sm">Você precisa fazer login. No ambiente de Preview, mude para o arquivo <b>login.html</b> manualmente no menu esquerdo.</p>
+                        <p class="text-gray-400 mt-2 text-center max-w-sm">Você precisa fazer login. No ambiente de Preview, mude para o arquivo <b>login.html</b> manualmente.</p>
                     `;
                     lucide.createIcons();
                 }
@@ -293,7 +296,7 @@
                 try {
                     window.location.href = 'login.html';
                 } catch (err) {
-                    window.location.reload(); // Fallback no preview
+                    window.location.reload();
                 }
             });
         };
@@ -352,9 +355,22 @@
                         window.companiesData[id] = data;
                         
                         const logo = data.logoUrl || 'https://placehold.co/100x100/gray/white?text=Logo';
-                        const layoutBadge = data.displayType === 'banner' 
-                            ? '<span class="bg-purple-100 text-purple-700 px-2 py-1 rounded text-xs font-bold border border-purple-200">Super Banner</span>' 
-                            : '<span class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-bold border border-gray-200">Card Padrão</span>';
+                        
+                        let layoutBadge = '';
+                        switch (data.displayType) {
+                            case 'free':
+                                layoutBadge = '<span class="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full text-xs font-bold border border-gray-200">🆓 Grátis</span>';
+                                break;
+                            case 'basic':
+                                layoutBadge = '<span class="bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full text-xs font-bold border border-blue-200">🔹 Básico</span>';
+                                break;
+                            case 'banner':
+                                layoutBadge = '<span class="bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full text-xs font-bold border border-purple-200">👑 Super Banner</span>';
+                                break;
+                            default: // 'carousel'
+                                layoutBadge = '<span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full text-xs font-bold border border-amber-200">⭐ Card Padrão</span>';
+                                break;
+                        }
 
                         html += `
                             <tr class="hover:bg-gray-50 transition-colors group">
