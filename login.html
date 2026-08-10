@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Guia Caldas Fácil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-100 font-sans min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md border border-gray-200">
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 bg-[#021A3A] rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <i data-lucide="lock" class="w-8 h-8 text-[#FFC700]"></i>
+            </div>
+            <h1 class="text-2xl font-black text-[#021A3A]">Acesso Restrito</h1>
+            <p class="text-sm text-gray-500 mt-1">Painel Administrativo - Guia Caldas Fácil</p>
+        </div>
+
+        <form id="login-form" class="space-y-6">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">E-mail Administrativo</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i data-lucide="mail" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <input type="email" id="email" required placeholder="admin@guiacaldas.com" class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">Senha</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i data-lucide="key" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <input type="password" id="password" required placeholder="••••••••" class="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-xl outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all">
+                </div>
+            </div>
+
+            <div id="error-msg" class="hidden bg-red-50 text-red-600 text-sm p-3 rounded-lg border border-red-100 text-center font-medium">
+                E-mail ou senha incorretos.
+            </div>
+
+            <button type="submit" id="login-btn" class="w-full bg-[#021A3A] hover:bg-blue-900 text-white font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg flex justify-center items-center gap-2">
+                Entrar no Sistema
+                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+        </form>
+        
+        <div class="mt-6 text-center">
+            <a href="index.html" class="text-sm text-gray-500 hover:text-blue-600 font-medium transition-colors flex items-center justify-center gap-1">
+                <i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar para o site
+            </a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // SUAS CHAVES DO FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCrdkV7_A3kUdvfOEfkpYhUZgfzEhEAfM",
+            authDomain: "guia-caldas-facil.firebaseapp.com",
+            projectId: "guia-caldas-facil",
+            storageBucket: "guia-caldas-facil.firebasestorage.app",
+            messagingSenderId: "46826988375",
+            appId: "1:46826988375:web:64a22b576e24c181d1d412"
+        };
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const form = document.getElementById('login-form');
+        const btn = document.getElementById('login-btn');
+        const errorMsg = document.getElementById('error-msg');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Entrando...`;
+            errorMsg.classList.add('hidden');
+            lucide.createIcons();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    // Logado com sucesso! Redireciona para o painel.
+                    window.location.href = "painel.html";
+                })
+                .catch((error) => {
+                    // Erro ao logar (senha errada, etc)
+                    btn.disabled = false;
+                    btn.innerHTML = `Entrar no Sistema <i data-lucide="arrow-right" class="w-5 h-5"></i>`;
+                    errorMsg.classList.remove('hidden');
+                    lucide.createIcons();
+                });
+        });
+    </script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
