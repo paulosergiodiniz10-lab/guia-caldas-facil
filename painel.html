@@ -3,134 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin - Guia Caldas Fácil</title>
+    <title>Perfil - Guia Caldas Fácil</title>
+    
+    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons via CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
-</head>
-<body class="bg-gray-100 font-sans min-h-screen">
 
-    <!-- Header do Painel -->
-    <header class="bg-[#021A3A] text-white py-4 px-6 flex justify-between items-center shadow-md">
-        <div class="flex items-center gap-2">
-            <i data-lucide="settings" class="text-[#FFC700] w-6 h-6"></i>
-            <h1 class="font-bold text-xl">Painel Administrativo</h1>
-        </div>
-        <a href="index.html" class="text-sm hover:text-[#FFC700] transition-colors flex items-center gap-2">
-            <i data-lucide="external-link" class="w-4 h-4"></i> Ver Site
+    <!-- Configuração do Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans min-h-screen flex flex-col">
+
+    <!-- Header Simples -->
+    <header class="bg-[#021A3A] text-white py-3 px-4 md:px-8 flex justify-between items-center sticky top-0 z-50 shadow-md">
+        <a href="index.html" class="flex items-center gap-2 cursor-pointer">
+            <i data-lucide="map-pin" class="text-[#FFC700] w-8 h-8"></i>
+            <div>
+                <h1 class="font-bold text-xl md:text-2xl leading-none flex gap-1">
+                    GUIA <span class="text-[#FFC700]">CALDAS FÁCIL</span>
+                </h1>
+            </div>
+        </a>
+        <a href="index.html" class="flex items-center gap-2 text-white hover:text-[#FFC700] transition-colors font-medium">
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+            <span>Voltar</span>
         </a>
     </header>
 
-    <main class="max-w-4xl mx-auto p-6">
-        <div class="bg-white rounded-xl shadow-md p-6 md:p-8">
-            <div class="mb-6 border-b pb-4">
-                <h2 class="text-2xl font-bold text-gray-800">Cadastrar Nova Empresa</h2>
-                <p class="text-gray-500 text-sm">Preencha os dados abaixo. O sistema fará o cadastro automático no banco de dados.</p>
+    <main class="flex-grow pb-12 relative">
+        <!-- Tela de Carregamento (Loading) -->
+        <div id="loading" class="absolute inset-0 bg-gray-50 z-40 flex flex-col items-center justify-center min-h-[60vh]">
+            <i data-lucide="loader-2" class="w-12 h-12 text-[#021A3A] animate-spin mb-4"></i>
+            <p class="text-gray-600 font-medium">Buscando informações da empresa...</p>
+        </div>
+
+        <!-- Mensagem de Erro (Inicialmente Oculta) -->
+        <div id="error-message" class="hidden absolute inset-0 bg-gray-50 z-40 flex flex-col items-center justify-center text-center px-4 min-h-[60vh]">
+            <i data-lucide="alert-circle" class="w-16 h-16 text-red-500 mb-4"></i>
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Empresa não encontrada</h2>
+            <p class="text-gray-600 mb-6">A empresa que você tentou acessar não existe ou ainda não foi cadastrada no banco de dados.</p>
+            <a href="index.html" class="bg-[#021A3A] text-white px-6 py-2 rounded-md hover:bg-blue-900 transition-colors font-medium">Voltar para o Início</a>
+        </div>
+
+        <!-- Conteúdo da Empresa (Inicialmente Oculto) -->
+        <div id="company-content" class="hidden">
+            
+            <!-- Banner de Capa -->
+            <div class="h-[250px] md:h-[400px] w-full relative bg-gray-200">
+                <img id="company-cover" src="" alt="Capa da Empresa" class="w-full h-full object-cover" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
             </div>
 
-            <form id="admin-form" class="space-y-6">
-                <!-- Informações Básicas -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">ID da Empresa (URL)*</label>
-                        <input type="text" id="compId" placeholder="ex: piratas-pizzaria (sem espaços)" required class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500 bg-gray-50">
-                        <p class="text-xs text-gray-500 mt-1">Isso será o link da empresa: ?id=nome</p>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Nome da Empresa*</label>
-                        <input type="text" id="compName" placeholder="Piratas Pizzaria" required class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Categoria*</label>
-                        <input type="text" id="compCat" placeholder="Gastronomia" required class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Nota (Estrelas)</label>
-                        <input type="text" id="compRating" placeholder="4.8" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                    </div>
+            <!-- Header Info (Logo "cortando" a linha e Texto em baixo) -->
+            <div class="max-w-7xl mx-auto px-4 relative flex flex-col md:flex-row gap-4 md:gap-6 mb-8">
+                <!-- Apenas a logo sobe com margem negativa -->
+                <div class="-mt-16 md:-mt-20 w-32 h-32 md:w-40 md:h-40 rounded-2xl border-4 border-white overflow-hidden shadow-lg bg-white shrink-0 z-20 mx-auto md:mx-4">
+                    <img id="company-logo" src="" alt="Logo da Empresa" class="w-full h-full object-cover" />
                 </div>
-
-                <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1">Descrição</label>
-                    <textarea id="compDesc" rows="3" placeholder="Escreva sobre a empresa..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
-                </div>
-
-                <!-- Contato e Localização -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Endereço</label>
-                        <input type="text" id="compAddress" placeholder="Rua, Número - Bairro" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Telefone / WhatsApp</label>
-                        <input type="text" id="compPhone" placeholder="Apenas números (ex: 5564999999999)" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Status de Funcionamento</label>
-                        <input type="text" id="compStatus" placeholder="Aberto agora" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Link do Google Maps</label>
-                        <input type="text" id="compMap" placeholder="https://maps.app.goo.gl/..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                    </div>
-                </div>
-
-                <!-- Imagens Principais -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Link da Logo (Quadrada)</label>
-                        <input type="text" id="compLogo" placeholder="https://link-da-imagem.com/logo.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Link da Capa (Retangular)</label>
-                        <input type="text" id="compCover" placeholder="https://link-da-imagem.com/capa.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500">
-                    </div>
-                </div>
-
-                <!-- Galeria e Vídeos (Onde a mágica acontece) -->
-                <div class="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <h3 class="font-bold text-gray-800">Mídias Extras</h3>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Galeria de Fotos (Separe os links por VÍRGULA)</label>
-                        <textarea id="compGallery" rows="2" placeholder="link1.jpg, link2.jpg, link3.jpg" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Vídeos do YouTube (Separe os links por VÍRGULA)</label>
-                        <textarea id="compVideos" rows="2" placeholder="https://youtube.com/embed/..., https://youtube.com/embed/..." class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-blue-500"></textarea>
-                    </div>
-                </div>
-
-                <!-- Cupom de Desconto -->
-                <div class="space-y-4 p-4 bg-red-50 rounded-lg border border-red-100">
-                    <h3 class="font-bold text-red-800 flex items-center gap-2"><i data-lucide="percent" class="w-4 h-4"></i> Adicionar 1 Cupom (Opcional)</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label class="block text-sm text-gray-700 mb-1">Título do Cupom</label>
-                            <input type="text" id="couponTitle" placeholder="Ex: 15% OFF" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
+                
+                <!-- O texto fica naturalmente na área branca com fonte escura -->
+                <div class="text-center md:text-left flex-1 pt-2 md:pt-4">
+                    <h1 id="company-name" class="text-3xl md:text-4xl font-black text-[#021A3A] leading-tight mb-2">Nome da Empresa</h1>
+                    <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-4">
+                        <div class="flex items-center justify-center md:justify-start gap-2 text-gray-800 bg-gray-100 border border-gray-200 px-4 py-1.5 rounded-full w-fit shadow-sm mx-auto md:mx-0">
+                            <i data-lucide="star" class="w-5 h-5 text-[#FFC700] fill-current"></i>
+                            <span id="company-rating" class="font-bold text-lg">5.0</span>
                         </div>
-                        <div>
-                            <label class="block text-sm text-gray-700 mb-1">Código Promocional</label>
-                            <input type="text" id="couponCode" placeholder="Ex: PIRATA15" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
+                        <span id="company-category" class="bg-[#FFC700] text-[#021A3A] text-xs font-bold px-3 py-1.5 rounded shadow-md inline-block uppercase tracking-wider mt-2 md:mt-0">Categoria</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container Principal (Duas colunas no PC) -->
+            <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Coluna Esquerda (Conteúdo Principal) -->
+                <div class="lg:col-span-2 space-y-8">
+                    
+                    <section class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h2 class="text-xl font-bold text-[#021A3A] mb-4 flex items-center gap-2">
+                            <i data-lucide="info" class="w-5 h-5 text-blue-600"></i> Sobre a empresa
+                        </h2>
+                        <p id="company-description" class="text-gray-600 leading-relaxed"></p>
+                    </section>
+
+                    <!-- Cupons Container -->
+                    <section id="coupons-section" class="hidden">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="percent" class="w-6 h-6 text-[#990000]"></i>
+                            <h2 class="text-xl font-bold text-[#021A3A]">Cupons de Desconto</h2>
                         </div>
-                        <div>
-                            <label class="block text-sm text-gray-700 mb-1">Regras/Validade</label>
-                            <input type="text" id="couponRules" placeholder="Ex: Válido até sexta" class="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:border-red-500">
+                        
+                        <div id="coupons-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Cupons serão injetados aqui -->
+                        </div>
+                    </section>
+
+                    <!-- Galeria de Fotos -->
+                    <section id="gallery-section" class="hidden relative">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="image" class="w-6 h-6 text-[#FFC700]"></i>
+                            <h2 class="text-xl font-bold text-[#021A3A]">Galeria de Fotos</h2>
+                        </div>
+                        
+                        <div class="relative group">
+                            <button id="scroll-left" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-md z-10 hidden md:group-hover:flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
+                                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                            </button>
+
+                            <div id="gallery-list" class="flex overflow-x-auto gap-4 pb-4 snap-x hide-scrollbar scroll-smooth">
+                                <!-- Fotos serão injetadas aqui -->
+                            </div>
+
+                            <button id="scroll-right" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full shadow-md z-10 hidden md:group-hover:flex items-center justify-center text-gray-800 hover:bg-gray-100 transition-colors">
+                                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Vídeos -->
+                    <section id="videos-section" class="hidden">
+                        <div class="flex items-center gap-2 mb-4">
+                            <i data-lucide="youtube" class="w-6 h-6 text-red-600"></i>
+                            <h2 class="text-xl font-bold text-[#021A3A]">Vídeos</h2>
+                        </div>
+                        
+                        <div id="videos-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Vídeos (iframes) serão injetados aqui -->
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Coluna Direita (Sidebar de Contato) -->
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4 sticky top-24">
+                        
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-gray-400 mt-1"></i>
+                            <div>
+                                <p id="company-address" class="text-sm text-gray-600 font-medium">Endereço</p>
+                                <a id="company-map-link" href="#" target="_blank" class="text-blue-600 text-sm font-bold hover:underline mt-1 hidden items-center gap-1">
+                                    Ver no mapa <i data-lucide="external-link" class="w-3 h-3"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <hr class="border-gray-50" />
+                        
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="clock" class="w-5 h-5 text-gray-400"></i>
+                            <span id="company-status" class="text-sm font-bold text-green-600">Status de funcionamento</span>
+                        </div>
+                        
+                        <hr class="border-gray-50" />
+                        
+                        <a id="company-whatsapp" href="#" target="_blank" class="w-full bg-[#25D366] hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-md shadow-green-500/20">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                            Chamar no WhatsApp
+                        </a>
+                        
+                        <div class="flex gap-2">
+                            <a id="company-phone" href="#" class="flex-1 border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                                <i data-lucide="phone" class="w-4 h-4"></i> Ligar
+                            </a>
+                            <button onclick="navigator.share({title: document.title, url: window.location.href})" class="flex-1 border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors">
+                                <i data-lucide="share-2" class="w-4 h-4"></i> Compartilhar
+                            </button>
                         </div>
                     </div>
                 </div>
-
-                <button type="submit" id="save-btn" class="w-full bg-[#021A3A] hover:bg-blue-900 text-white font-bold py-4 rounded-lg flex items-center justify-center gap-2 transition-colors text-lg shadow-lg">
-                    <i data-lucide="save" class="w-5 h-5"></i> Salvar Empresa no Banco de Dados
-                </button>
-                <div id="status-msg" class="hidden text-center font-bold p-3 rounded-lg mt-4"></div>
-            </form>
+            </div>
         </div>
     </main>
 
+    <!-- Lógica embutida: Firebase + Preenchimento da Tela -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // Suas chaves do Firebase
+        // 1. Suas chaves de configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDCrdkV7_A3kUdvfOEfkpYhUZgfzEhEAfM",
             authDomain: "guia-caldas-facil.firebaseapp.com",
@@ -142,80 +210,155 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const form = document.getElementById('admin-form');
-        const btn = document.getElementById('save-btn');
-        const statusMsg = document.getElementById('status-msg');
+        async function loadCompanyData() {
+            // Pega o ID da empresa que está na barra de endereço (ex: ?id=piratas-pizzaria)
+            const urlParams = new URLSearchParams(window.location.search);
+            const companyId = urlParams.get('id');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Impede a página de recarregar
-            
-            // Muda o botão para mostrar que está carregando
-            btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Salvando...`;
-            btn.classList.add('opacity-70', 'cursor-not-allowed');
-            
-            // 1. Pega o ID (único para cada empresa) - GARANTINDO FORMATAÇÃO
-            let compId = document.getElementById('compId').value;
-            // Remove acentos, transforma em minúsculas e troca espaços e pontuações por traços
-            compId = compId.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
+            const loadingDiv = document.getElementById('loading');
+            const contentDiv = document.getElementById('company-content');
+            const errorDiv = document.getElementById('error-message');
 
-            // 2. Prepara as listas de galeria e vídeo (divide pelas vírgulas e limpa espaços)
-            const rawGallery = document.getElementById('compGallery').value;
-            const galleryArray = rawGallery ? rawGallery.split(',').map(item => item.trim()).filter(item => item !== "") : [];
-
-            const rawVideos = document.getElementById('compVideos').value;
-            const videosArray = rawVideos ? rawVideos.split(',').map(item => item.trim()).filter(item => item !== "") : [];
-
-            // 3. Prepara o cupom (se houver título)
-            let couponsArray = [];
-            const couponTitle = document.getElementById('couponTitle').value;
-            if(couponTitle) {
-                couponsArray.push({
-                    title: couponTitle,
-                    code: document.getElementById('couponCode').value,
-                    rules: document.getElementById('couponRules').value
-                });
+            if (!companyId) {
+                loadingDiv.classList.add('hidden');
+                errorDiv.classList.remove('hidden');
+                return;
             }
-
-            // 4. Monta o pacote de dados que vai pro Firebase
-            const companyData = {
-                name: document.getElementById('compName').value,
-                category: document.getElementById('compCat').value,
-                rating: document.getElementById('compRating').value,
-                description: document.getElementById('compDesc').value,
-                address: document.getElementById('compAddress').value,
-                phone: document.getElementById('compPhone').value,
-                status: document.getElementById('compStatus').value,
-                mapUrl: document.getElementById('compMap').value,
-                logoUrl: document.getElementById('compLogo').value,
-                coverUrl: document.getElementById('compCover').value,
-                gallery: galleryArray,
-                videos: videosArray,
-                coupons: couponsArray
-            };
 
             try {
-                // 5. Salva de verdade no Firebase (Cria ou Atualiza)
-                await setDoc(doc(db, "empresas", compId), companyData);
+                // 2. Busca os dados no Banco de Dados Real (Firestore)
+                const docRef = doc(db, "empresas", companyId);
+                const docSnap = await getDoc(docRef);
+
+                if (!docSnap.exists()) {
+                    throw new Error("Empresa não encontrada no banco de dados.");
+                }
+
+                // 3. Pega as informações do banco
+                const companyData = docSnap.data();
+
+                // 4. Preenche os textos na tela
+                document.getElementById('company-name').textContent = companyData.name || "Nome da Empresa";
+                document.getElementById('company-category').textContent = companyData.category || "Categoria";
+                document.getElementById('company-rating').textContent = companyData.rating || "5.0";
+                document.getElementById('company-description').textContent = companyData.description || "Descrição não informada.";
+                document.getElementById('company-address').textContent = companyData.address || "Endereço não informado.";
+                document.getElementById('company-status').textContent = companyData.status || "Status não informado";
+
+                // Map Link
+                const mapLinkElement = document.getElementById('company-map-link');
+                if (companyData.mapUrl) {
+                    mapLinkElement.href = companyData.mapUrl;
+                    mapLinkElement.style.display = 'flex';
+                }
+
+                // Imagens e Links
+                if(companyData.coverUrl) document.getElementById('company-cover').src = companyData.coverUrl;
+                if(companyData.logoUrl) document.getElementById('company-logo').src = companyData.logoUrl;
+                if(companyData.phone) {
+                    let foneNumerico = companyData.phone.replace(/\D/g,'');
+                    document.getElementById('company-whatsapp').href = `https://wa.me/${foneNumerico}`;
+                    document.getElementById('company-phone').href = `tel:+${foneNumerico}`;
+                }
+
+                document.title = `${companyData.name || 'Empresa'} - Guia Caldas Fácil`;
+
+                // 5. Verifica e injeta os Cupons
+                if (companyData.coupons && companyData.coupons.length > 0) {
+                    document.getElementById('coupons-section').classList.remove('hidden');
+                    const couponsList = document.getElementById('coupons-list');
+                    
+                    companyData.coupons.forEach(coupon => {
+                        const couponHTML = `
+                            <div class="bg-gradient-to-r from-red-50 to-white border border-red-100 p-4 rounded-xl flex items-center justify-between shadow-sm relative overflow-hidden group">
+                                <div class="absolute -right-4 -top-4 text-red-50 opacity-50 group-hover:scale-110 transition-transform">
+                                    <i data-lucide="percent" class="w-24 h-24"></i>
+                                </div>
+                                <div class="relative z-10 w-full flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div>
+                                        <h4 class="font-bold text-red-700 text-lg">${coupon.title}</h4>
+                                        <p class="text-xs text-gray-500 mb-2">${coupon.rules}</p>
+                                        <div class="inline-block bg-white border-2 border-dashed border-red-200 text-red-600 font-mono font-bold py-1 px-3 rounded">
+                                            ${coupon.code}
+                                        </div>
+                                    </div>
+                                    <button onclick="alert('Funcionalidade de download do cupom será conectada ao painel em breve!')" class="shrink-0 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors border border-red-200 cursor-pointer z-20">
+                                        <i data-lucide="download" class="w-4 h-4"></i>
+                                        Baixar Cupom
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        couponsList.insertAdjacentHTML('beforeend', couponHTML);
+                    });
+                }
+
+                // 6. Verifica e injeta a Galeria
+                if (companyData.gallery && companyData.gallery.length > 0) {
+                    document.getElementById('gallery-section').classList.remove('hidden');
+                    const galleryList = document.getElementById('gallery-list');
+                    
+                    companyData.gallery.forEach(imgUrl => {
+                        const imgHTML = `
+                            <a href="${imgUrl}" target="_blank" class="block min-w-[150px] md:min-w-[200px] aspect-square overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-shadow group border border-gray-100 snap-center">
+                                <img src="${imgUrl}" alt="Foto da Galeria" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
+                                    <i data-lucide="zoom-in" class="text-white opacity-0 group-hover:opacity-100 w-8 h-8 transition-opacity"></i>
+                                </div>
+                            </a>
+                        `;
+                        galleryList.insertAdjacentHTML('beforeend', imgHTML);
+                    });
+
+                    // Lógica das setas do carrossel
+                    const scrollLeftBtn = document.getElementById('scroll-left');
+                    const scrollRightBtn = document.getElementById('scroll-right');
+                    if(scrollLeftBtn && scrollRightBtn) {
+                         scrollLeftBtn.addEventListener('click', () => { galleryList.scrollBy({ left: -250, behavior: 'smooth' }); });
+                         scrollRightBtn.addEventListener('click', () => { galleryList.scrollBy({ left: 250, behavior: 'smooth' }); });
+                    }
+                }
+
+                // 7. Verifica e injeta os Vídeos (YouTube)
+                if (companyData.videos && companyData.videos.length > 0) {
+                    document.getElementById('videos-section').classList.remove('hidden');
+                    const videosList = document.getElementById('videos-list');
+                    
+                    companyData.videos.forEach(videoUrl => {
+                        const videoHTML = `
+                            <div class="aspect-video w-full rounded-xl overflow-hidden shadow-md bg-black">
+                                <iframe src="${videoUrl}" title="Vídeo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
+                            </div>
+                        `;
+                        videosList.insertAdjacentHTML('beforeend', videoHTML);
+                    });
+                }
+
+                // Mostra a tela final
+                loadingDiv.classList.add('hidden');
+                contentDiv.classList.remove('hidden');
                 
-                statusMsg.textContent = "✅ Empresa cadastrada/atualizada com sucesso!";
-                statusMsg.className = "text-green-700 bg-green-100 font-bold p-3 rounded-lg mt-4 block text-center";
-                
-                // Volta o botão ao normal
-                btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Salvar Empresa no Banco de Dados`;
-                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+                // Renderiza os ícones do Lucide após inserir o HTML dinâmico
                 lucide.createIcons();
-                
+
             } catch (error) {
-                console.error("Erro:", error);
-                statusMsg.textContent = "❌ Erro ao salvar: " + error.message;
-                statusMsg.className = "text-red-700 bg-red-100 font-bold p-3 rounded-lg mt-4 block text-center";
-                
-                btn.innerHTML = `<i data-lucide="save" class="w-5 h-5"></i> Tentar Novamente`;
-                btn.classList.remove('opacity-70', 'cursor-not-allowed');
-                lucide.createIcons();
+                console.error("Erro ao carregar empresa:", error);
+                loadingDiv.classList.add('hidden');
+                errorDiv.classList.remove('hidden');
             }
-        });
+        }
+
+        // Executa quando a página terminar de ler o HTML
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', loadCompanyData);
+        } else {
+            loadCompanyData();
+        }
     </script>
-    <script>lucide.createIcons();</script>
+
+    <!-- Ativação dos ícones iniciais do header -->
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>
