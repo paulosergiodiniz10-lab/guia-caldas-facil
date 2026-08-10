@@ -153,8 +153,10 @@
             btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i> Salvando...`;
             btn.classList.add('opacity-70', 'cursor-not-allowed');
             
-            // 1. Pega o ID (único para cada empresa)
-            const compId = document.getElementById('compId').value.trim().toLowerCase().replace(/\s+/g, '-');
+            // 1. Pega o ID (único para cada empresa) - GARANTINDO FORMATAÇÃO
+            let compId = document.getElementById('compId').value;
+            // Remove acentos, transforma em minúsculas e troca espaços e pontuações por traços
+            compId = compId.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
 
             // 2. Prepara as listas de galeria e vídeo (divide pelas vírgulas e limpa espaços)
             const rawGallery = document.getElementById('compGallery').value;
