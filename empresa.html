@@ -329,6 +329,8 @@
                 
                 if (hasSocialLinks) {
                     socialContainer.classList.remove('hidden');
+                    // Chama a renderização do Lucide APENAS dentro do bloco de redes sociais para garantir que os elementos existam.
+                    setTimeout(() => { lucide.createIcons(); }, 50); 
                 }
 
                 document.title = `${companyData.name || 'Empresa'} - Guia Caldas Fácil`;
