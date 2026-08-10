@@ -54,7 +54,7 @@
             <p class="text-gray-600 font-medium">Buscando informações da empresa...</p>
         </div>
 
-        <!-- Mensagem de Erro (Inicialmente Oculta) -->
+        <!-- Mensagem de Erro -->
         <div id="error-message" class="hidden absolute inset-0 bg-gray-50 z-40 flex flex-col items-center justify-center text-center px-4 min-h-[60vh]">
             <i data-lucide="alert-circle" class="w-16 h-16 text-red-500 mb-4"></i>
             <h2 class="text-2xl font-bold text-gray-800 mb-2">Empresa não encontrada</h2>
@@ -62,31 +62,32 @@
             <a href="index.html" class="bg-[#021A3A] text-white px-6 py-2 rounded-md hover:bg-blue-900 transition-colors font-medium">Voltar para o Início</a>
         </div>
 
-        <!-- Conteúdo da Empresa (Inicialmente Oculto) -->
+        <!-- Conteúdo da Empresa -->
         <div id="company-content" class="hidden">
             
-            <!-- Banner de Capa -->
+            <!-- Banner de Capa (Removido a Categoria daqui) -->
             <div class="h-[250px] md:h-[400px] w-full relative bg-gray-200">
-                <img id="company-cover" src="" alt="Capa da Empresa" class="w-full h-full object-cover" />
+                <img id="company-cover" src="" alt="Capa da Empresa" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1200x400/gray/white?text=Sem+Capa'" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
             </div>
 
-            <!-- Header Info (Logo "cortando" a linha e Texto em baixo) -->
+            <!-- Header Info -->
             <div class="max-w-7xl mx-auto px-4 relative flex flex-col md:flex-row gap-4 md:gap-6 mb-8">
-                <!-- Apenas a logo sobe com margem negativa -->
+                <!-- Logo -->
                 <div class="-mt-16 md:-mt-20 w-32 h-32 md:w-40 md:h-40 rounded-2xl border-4 border-white overflow-hidden shadow-lg bg-white shrink-0 z-20 mx-auto md:mx-4">
-                    <img id="company-logo" src="" alt="Logo da Empresa" class="w-full h-full object-cover" />
+                    <img id="company-logo" src="" alt="Logo da Empresa" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/gray/white?text=Sem+Logo'" />
                 </div>
                 
-                <!-- O texto fica naturalmente na área branca com fonte escura -->
+                <!-- Nome, Nota e Categoria -->
                 <div class="text-center md:text-left flex-1 pt-2 md:pt-4">
                     <h1 id="company-name" class="text-3xl md:text-4xl font-black text-[#021A3A] leading-tight mb-2">Nome da Empresa</h1>
-                    <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-2 md:gap-4">
+                    <div class="flex flex-col md:flex-row items-center justify-center md:justify-start gap-3">
                         <div class="flex items-center justify-center md:justify-start gap-2 text-gray-800 bg-gray-100 border border-gray-200 px-4 py-1.5 rounded-full w-fit shadow-sm mx-auto md:mx-0">
                             <i data-lucide="star" class="w-5 h-5 text-[#FFC700] fill-current"></i>
                             <span id="company-rating" class="font-bold text-lg">5.0</span>
                         </div>
-                        <span id="company-category" class="bg-[#FFC700] text-[#021A3A] text-xs font-bold px-3 py-1.5 rounded shadow-md inline-block uppercase tracking-wider mt-2 md:mt-0">Categoria</span>
+                        <!-- Categoria posicionada aqui -->
+                        <span id="company-category" class="bg-[#FFC700] text-[#021A3A] text-xs font-bold px-3 py-1.5 rounded shadow-md inline-block uppercase tracking-wider">Categoria</span>
                     </div>
                 </div>
             </div>
@@ -101,6 +102,7 @@
                         <h2 class="text-xl font-bold text-[#021A3A] mb-4 flex items-center gap-2">
                             <i data-lucide="info" class="w-5 h-5 text-blue-600"></i> Sobre a empresa
                         </h2>
+                        <!-- Adicionado leading-relaxed para melhorar a leitura -->
                         <p id="company-description" class="text-gray-600 leading-relaxed"></p>
                     </section>
 
@@ -155,6 +157,7 @@
                 <div class="space-y-6">
                     <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4 sticky top-24">
                         
+                        <!-- Endereço e Link do Mapa -->
                         <div class="flex items-start gap-3">
                             <i data-lucide="map-pin" class="w-5 h-5 text-gray-400 mt-1"></i>
                             <div>
@@ -167,13 +170,17 @@
                         
                         <hr class="border-gray-50" />
                         
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="clock" class="w-5 h-5 text-gray-400"></i>
-                            <span id="company-status" class="text-sm font-bold text-green-600">Status de funcionamento</span>
+                        <!-- Horário/Status -->
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="clock" class="w-5 h-5 text-gray-400 mt-1 shrink-0"></i>
+                            <div id="company-status" class="text-sm font-bold text-green-700 leading-relaxed">
+                                Status de funcionamento
+                            </div>
                         </div>
                         
                         <hr class="border-gray-50" />
                         
+                        <!-- Botões de Contato -->
                         <a id="company-whatsapp" href="#" target="_blank" class="w-full bg-[#25D366] hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-md shadow-green-500/20">
                             <i data-lucide="message-circle" class="w-5 h-5"></i>
                             Chamar no WhatsApp
@@ -187,18 +194,53 @@
                                 <i data-lucide="share-2" class="w-4 h-4"></i> Compartilhar
                             </button>
                         </div>
+
+                        <!-- Redes Sociais e Site (Aparecem se tiver no banco de dados) -->
+                        <div id="social-links-container" class="hidden pt-4 border-t border-gray-100 flex items-center justify-center gap-4">
+                            <!-- Ícones injetados via JavaScript -->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Lógica embutida: Firebase + Preenchimento da Tela -->
+    <!-- Lógica de Conversão do YouTube -->
+    <script>
+        // Função inteligente que converte qualquer link do Youtube para o formato de Embed (iframe)
+        function convertToEmbedUrl(url) {
+            let videoId = '';
+            
+            // Verifica o link padrão: youtube.com/watch?v=XXXX
+            if (url.includes('youtube.com/watch?v=')) {
+                videoId = url.split('v=')[1];
+                let ampersandPosition = videoId.indexOf('&');
+                if(ampersandPosition != -1) {
+                    videoId = videoId.substring(0, ampersandPosition);
+                }
+            } 
+            // Verifica o link curto: youtu.be/XXXX
+            else if (url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1];
+                let questionPosition = videoId.indexOf('?');
+                if(questionPosition != -1) {
+                    videoId = videoId.substring(0, questionPosition);
+                }
+            }
+            
+            // Se encontrou o ID, retorna o link de embed. Se não, retorna o URL original e torce pra dar certo.
+            if (videoId) {
+                return `https://www.youtube.com/embed/${videoId}`;
+            }
+            return url;
+        }
+    </script>
+
+    <!-- Lógica do Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-        // 1. Suas chaves de configuração do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyDCrdkV7_A3kUdvfOEfkpYhUZgfzEhEAfM",
             authDomain: "guia-caldas-facil.firebaseapp.com",
@@ -211,7 +253,6 @@
         const db = getFirestore(app);
 
         async function loadCompanyData() {
-            // Pega o ID da empresa que está na barra de endereço (ex: ?id=piratas-pizzaria)
             const urlParams = new URLSearchParams(window.location.search);
             const companyId = urlParams.get('id');
 
@@ -226,7 +267,6 @@
             }
 
             try {
-                // 2. Busca os dados no Banco de Dados Real (Firestore)
                 const docRef = doc(db, "empresas", companyId);
                 const docSnap = await getDoc(docRef);
 
@@ -234,25 +274,24 @@
                     throw new Error("Empresa não encontrada no banco de dados.");
                 }
 
-                // 3. Pega as informações do banco
                 const companyData = docSnap.data();
 
-                // 4. Preenche os textos na tela
+                // 1. Textos Simples
                 document.getElementById('company-name').textContent = companyData.name || "Nome da Empresa";
                 document.getElementById('company-category').textContent = companyData.category || "Categoria";
                 document.getElementById('company-rating').textContent = companyData.rating || "5.0";
-                document.getElementById('company-description').textContent = companyData.description || "Descrição não informada.";
                 document.getElementById('company-address').textContent = companyData.address || "Endereço não informado.";
-                document.getElementById('company-status').textContent = companyData.status || "Status não informado";
-
-                // Map Link
-                const mapLinkElement = document.getElementById('company-map-link');
-                if (companyData.mapUrl) {
-                    mapLinkElement.href = companyData.mapUrl;
-                    mapLinkElement.style.display = 'flex';
+                
+                // 2. Textos Complexos (Substituindo "Enter" por quebra de linha HTML <br>)
+                if(companyData.description) {
+                    document.getElementById('company-description').innerHTML = companyData.description.replace(/\n/g, '<br>');
+                }
+                
+                if(companyData.status) {
+                    document.getElementById('company-status').innerHTML = companyData.status.replace(/\n/g, '<br>');
                 }
 
-                // Imagens e Links
+                // 3. Imagens e Links Básicos
                 if(companyData.coverUrl) document.getElementById('company-cover').src = companyData.coverUrl;
                 if(companyData.logoUrl) document.getElementById('company-logo').src = companyData.logoUrl;
                 if(companyData.phone) {
@@ -261,9 +300,35 @@
                     document.getElementById('company-phone').href = `tel:+${foneNumerico}`;
                 }
 
+                // 4. Link do Mapa
+                const mapLinkElement = document.getElementById('company-map-link');
+                if (companyData.mapUrl) {
+                    mapLinkElement.href = companyData.mapUrl;
+                    mapLinkElement.style.display = 'flex';
+                }
+
+                // 5. Redes Sociais e Site
+                const socialContainer = document.getElementById('social-links-container');
+                let socialHTML = '';
+                
+                if (companyData.siteUrl) {
+                    socialHTML += `<a href="${companyData.siteUrl}" target="_blank" class="p-2.5 bg-gray-100 rounded-full hover:bg-gray-200 text-gray-700 transition-colors shadow-sm" title="Site"><i data-lucide="globe" class="w-5 h-5"></i></a>`;
+                }
+                if (companyData.instaUrl) {
+                    socialHTML += `<a href="${companyData.instaUrl}" target="_blank" class="p-2.5 bg-pink-50 rounded-full hover:bg-pink-100 text-pink-600 transition-colors shadow-sm" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>`;
+                }
+                if (companyData.faceUrl) {
+                    socialHTML += `<a href="${companyData.faceUrl}" target="_blank" class="p-2.5 bg-blue-50 rounded-full hover:bg-blue-100 text-blue-600 transition-colors shadow-sm" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>`;
+                }
+                
+                if (socialHTML !== '') {
+                    socialContainer.innerHTML = socialHTML;
+                    socialContainer.classList.remove('hidden');
+                }
+
                 document.title = `${companyData.name || 'Empresa'} - Guia Caldas Fácil`;
 
-                // 5. Verifica e injeta os Cupons
+                // 6. Cupons
                 if (companyData.coupons && companyData.coupons.length > 0) {
                     document.getElementById('coupons-section').classList.remove('hidden');
                     const couponsList = document.getElementById('coupons-list');
@@ -282,7 +347,7 @@
                                             ${coupon.code}
                                         </div>
                                     </div>
-                                    <button onclick="alert('Funcionalidade de download do cupom será conectada ao painel em breve!')" class="shrink-0 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors border border-red-200 cursor-pointer z-20">
+                                    <button onclick="alert('Esta função irá gerar um PDF ou Imagem do cupom em breve!')" class="shrink-0 bg-red-100 hover:bg-red-200 text-red-700 text-sm font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors border border-red-200 cursor-pointer z-20">
                                         <i data-lucide="download" class="w-4 h-4"></i>
                                         Baixar Cupom
                                     </button>
@@ -293,7 +358,7 @@
                     });
                 }
 
-                // 6. Verifica e injeta a Galeria
+                // 7. Galeria
                 if (companyData.gallery && companyData.gallery.length > 0) {
                     document.getElementById('gallery-section').classList.remove('hidden');
                     const galleryList = document.getElementById('gallery-list');
@@ -310,7 +375,6 @@
                         galleryList.insertAdjacentHTML('beforeend', imgHTML);
                     });
 
-                    // Lógica das setas do carrossel
                     const scrollLeftBtn = document.getElementById('scroll-left');
                     const scrollRightBtn = document.getElementById('scroll-right');
                     if(scrollLeftBtn && scrollRightBtn) {
@@ -319,26 +383,27 @@
                     }
                 }
 
-                // 7. Verifica e injeta os Vídeos (YouTube)
+                // 8. Vídeos com conversão inteligente
                 if (companyData.videos && companyData.videos.length > 0) {
                     document.getElementById('videos-section').classList.remove('hidden');
                     const videosList = document.getElementById('videos-list');
                     
                     companyData.videos.forEach(videoUrl => {
+                        // Usa a função mágica para converter o link!
+                        const embedUrl = convertToEmbedUrl(videoUrl);
+                        
                         const videoHTML = `
                             <div class="aspect-video w-full rounded-xl overflow-hidden shadow-md bg-black">
-                                <iframe src="${videoUrl}" title="Vídeo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
+                                <iframe src="${embedUrl}" title="Vídeo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
                             </div>
                         `;
                         videosList.insertAdjacentHTML('beforeend', videoHTML);
                     });
                 }
 
-                // Mostra a tela final
+                // Mostra a tela final e renderiza ícones dinâmicos
                 loadingDiv.classList.add('hidden');
                 contentDiv.classList.remove('hidden');
-                
-                // Renderiza os ícones do Lucide após inserir o HTML dinâmico
                 lucide.createIcons();
 
             } catch (error) {
@@ -348,7 +413,6 @@
             }
         }
 
-        // Executa quando a página terminar de ler o HTML
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', loadCompanyData);
         } else {
@@ -356,7 +420,7 @@
         }
     </script>
 
-    <!-- Ativação dos ícones iniciais do header -->
+    <!-- Ativação inicial dos ícones -->
     <script>
         lucide.createIcons();
     </script>
