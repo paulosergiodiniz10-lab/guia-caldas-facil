@@ -65,7 +65,7 @@
         <!-- Conteúdo da Empresa -->
         <div id="company-content" class="hidden">
             
-            <!-- Banner de Capa (Removido a Categoria daqui) -->
+            <!-- Banner de Capa -->
             <div class="h-[250px] md:h-[400px] w-full relative bg-gray-200">
                 <img id="company-cover" src="" alt="Capa da Empresa" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/1200x400/gray/white?text=Sem+Capa'" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
@@ -86,7 +86,7 @@
                             <i data-lucide="star" class="w-5 h-5 text-[#FFC700] fill-current"></i>
                             <span id="company-rating" class="font-bold text-lg">5.0</span>
                         </div>
-                        <!-- Categoria posicionada aqui -->
+                        <!-- Categoria posicionada abaixo do nome e ao lado da nota -->
                         <span id="company-category" class="bg-[#FFC700] text-[#021A3A] text-xs font-bold px-3 py-1.5 rounded shadow-md inline-block uppercase tracking-wider">Categoria</span>
                     </div>
                 </div>
@@ -309,20 +309,25 @@
 
                 // 5. Redes Sociais e Site
                 const socialContainer = document.getElementById('social-links-container');
-                let socialHTML = '';
+                
+                // Limpa o container antes de adicionar para evitar duplicatas em re-renderizações
+                socialContainer.innerHTML = '';
+                let hasSocialLinks = false;
                 
                 if (companyData.siteUrl) {
-                    socialHTML += `<a href="${companyData.siteUrl}" target="_blank" class="p-2.5 bg-gray-100 rounded-full hover:bg-gray-200 text-gray-700 transition-colors shadow-sm" title="Site"><i data-lucide="globe" class="w-5 h-5"></i></a>`;
+                    socialContainer.insertAdjacentHTML('beforeend', `<a href="${companyData.siteUrl}" target="_blank" class="p-2.5 bg-gray-100 rounded-full hover:bg-gray-200 text-gray-700 transition-colors shadow-sm" title="Site"><i data-lucide="globe" class="w-5 h-5"></i></a>`);
+                    hasSocialLinks = true;
                 }
                 if (companyData.instaUrl) {
-                    socialHTML += `<a href="${companyData.instaUrl}" target="_blank" class="p-2.5 bg-pink-50 rounded-full hover:bg-pink-100 text-pink-600 transition-colors shadow-sm" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>`;
+                    socialContainer.insertAdjacentHTML('beforeend', `<a href="${companyData.instaUrl}" target="_blank" class="p-2.5 bg-pink-50 rounded-full hover:bg-pink-100 text-pink-600 transition-colors shadow-sm" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>`);
+                    hasSocialLinks = true;
                 }
                 if (companyData.faceUrl) {
-                    socialHTML += `<a href="${companyData.faceUrl}" target="_blank" class="p-2.5 bg-blue-50 rounded-full hover:bg-blue-100 text-blue-600 transition-colors shadow-sm" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>`;
+                    socialContainer.insertAdjacentHTML('beforeend', `<a href="${companyData.faceUrl}" target="_blank" class="p-2.5 bg-blue-50 rounded-full hover:bg-blue-100 text-blue-600 transition-colors shadow-sm" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>`);
+                    hasSocialLinks = true;
                 }
                 
-                if (socialHTML !== '') {
-                    socialContainer.innerHTML = socialHTML;
+                if (hasSocialLinks) {
                     socialContainer.classList.remove('hidden');
                 }
 
