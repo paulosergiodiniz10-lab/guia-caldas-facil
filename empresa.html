@@ -102,7 +102,6 @@
                         <h2 class="text-xl font-bold text-[#021A3A] mb-4 flex items-center gap-2">
                             <i data-lucide="info" class="w-5 h-5 text-blue-600"></i> Sobre a empresa
                         </h2>
-                        <!-- Adicionado leading-relaxed para melhorar a leitura -->
                         <p id="company-description" class="text-gray-600 leading-relaxed"></p>
                     </section>
 
@@ -195,10 +194,25 @@
                             </button>
                         </div>
 
-                        <!-- Redes Sociais e Site (Aparecem se tiver no banco de dados) -->
+                        <!-- SOLUÇÃO DEFINITIVA DAS REDES SOCIAIS -->
+                        <!-- Os botões já ficam no HTML, mas escondidos (hidden). O JavaScript só vai revelar os que tem link -->
                         <div id="social-links-container" class="hidden pt-4 border-t border-gray-100 flex items-center justify-center gap-4">
-                            <!-- Ícones injetados via JavaScript -->
+                            
+                            <a id="link-site" href="#" target="_blank" class="hidden p-2.5 bg-gray-100 rounded-full hover:bg-gray-200 text-gray-700 transition-colors shadow-sm" title="Site">
+                                <i data-lucide="globe" class="w-5 h-5"></i>
+                            </a>
+                            
+                            <a id="link-insta" href="#" target="_blank" class="hidden p-2.5 bg-pink-50 rounded-full hover:bg-pink-100 text-pink-600 transition-colors shadow-sm" title="Instagram">
+                                <i data-lucide="instagram" class="w-5 h-5"></i>
+                            </a>
+                            
+                            <a id="link-face" href="#" target="_blank" class="hidden p-2.5 bg-blue-50 rounded-full hover:bg-blue-100 text-blue-600 transition-colors shadow-sm" title="Facebook">
+                                <i data-lucide="facebook" class="w-5 h-5"></i>
+                            </a>
+
                         </div>
+                        <!-- FIM DA SOLUÇÃO DAS REDES SOCIAIS -->
+
                     </div>
                 </div>
             </div>
@@ -207,28 +221,21 @@
 
     <!-- Lógica de Conversão do YouTube -->
     <script>
-        // Função inteligente que converte qualquer link do Youtube para o formato de Embed (iframe)
         function convertToEmbedUrl(url) {
             let videoId = '';
-            
-            // Verifica o link padrão: youtube.com/watch?v=XXXX
             if (url.includes('youtube.com/watch?v=')) {
                 videoId = url.split('v=')[1];
                 let ampersandPosition = videoId.indexOf('&');
                 if(ampersandPosition != -1) {
                     videoId = videoId.substring(0, ampersandPosition);
                 }
-            } 
-            // Verifica o link curto: youtu.be/XXXX
-            else if (url.includes('youtu.be/')) {
+            } else if (url.includes('youtu.be/')) {
                 videoId = url.split('youtu.be/')[1];
                 let questionPosition = videoId.indexOf('?');
                 if(questionPosition != -1) {
                     videoId = videoId.substring(0, questionPosition);
                 }
             }
-            
-            // Se encontrou o ID, retorna o link de embed. Se não, retorna o URL original e torce pra dar certo.
             if (videoId) {
                 return `https://www.youtube.com/embed/${videoId}`;
             }
@@ -282,7 +289,7 @@
                 document.getElementById('company-rating').textContent = companyData.rating || "5.0";
                 document.getElementById('company-address').textContent = companyData.address || "Endereço não informado.";
                 
-                // 2. Textos Complexos (Substituindo "Enter" por quebra de linha HTML <br>)
+                // 2. Textos Complexos (Substituindo Enter por quebra de linha <br>)
                 if(companyData.description) {
                     document.getElementById('company-description').innerHTML = companyData.description.replace(/\n/g, '<br>');
                 }
@@ -307,30 +314,33 @@
                     mapLinkElement.style.display = 'flex';
                 }
 
-                // 5. Redes Sociais e Site
+                // 5. Redes Sociais e Site (Novo sistema infalível)
                 const socialContainer = document.getElementById('social-links-container');
+                const linkSite = document.getElementById('link-site');
+                const linkInsta = document.getElementById('link-insta');
+                const linkFace = document.getElementById('link-face');
                 
-                // Limpa o container antes de adicionar para evitar duplicatas em re-renderizações
-                socialContainer.innerHTML = '';
                 let hasSocialLinks = false;
                 
                 if (companyData.siteUrl) {
-                    socialContainer.insertAdjacentHTML('beforeend', `<a href="${companyData.siteUrl}" target="_blank" class="p-2.5 bg-gray-100 rounded-full hover:bg-gray-200 text-gray-700 transition-colors shadow-sm" title="Site"><i data-lucide="globe" class="w-5 h-5"></i></a>`);
+                    linkSite.href = companyData.siteUrl;
+                    linkSite.classList.remove('hidden'); // Mostra o botão
                     hasSocialLinks = true;
                 }
                 if (companyData.instaUrl) {
-                    socialContainer.insertAdjacentHTML('beforeend', `<a href="${companyData.instaUrl}" target="_blank" class="p-2.5 bg-pink-50 rounded-full hover:bg-pink-100 text-pink-600 transition-colors shadow-sm" title="Instagram"><i data-lucide="instagram" class="w-5 h-5"></i></a>`);
+                    linkInsta.href = companyData.instaUrl;
+                    linkInsta.classList.remove('hidden'); // Mostra o botão
                     hasSocialLinks = true;
                 }
                 if (companyData.faceUrl) {
-                    socialContainer.insertAdjacentHTML('beforeend', `<a href="${companyData.faceUrl}" target="_blank" class="p-2.5 bg-blue-50 rounded-full hover:bg-blue-100 text-blue-600 transition-colors shadow-sm" title="Facebook"><i data-lucide="facebook" class="w-5 h-5"></i></a>`);
+                    linkFace.href = companyData.faceUrl;
+                    linkFace.classList.remove('hidden'); // Mostra o botão
                     hasSocialLinks = true;
                 }
                 
+                // Se tiver pelo menos 1 link, mostra a caixa inteira das redes sociais
                 if (hasSocialLinks) {
                     socialContainer.classList.remove('hidden');
-                    // Chama a renderização do Lucide APENAS dentro do bloco de redes sociais para garantir que os elementos existam.
-                    setTimeout(() => { lucide.createIcons(); }, 50); 
                 }
 
                 document.title = `${companyData.name || 'Empresa'} - Guia Caldas Fácil`;
@@ -390,15 +400,13 @@
                     }
                 }
 
-                // 8. Vídeos com conversão inteligente
+                // 8. Vídeos
                 if (companyData.videos && companyData.videos.length > 0) {
                     document.getElementById('videos-section').classList.remove('hidden');
                     const videosList = document.getElementById('videos-list');
                     
                     companyData.videos.forEach(videoUrl => {
-                        // Usa a função mágica para converter o link!
                         const embedUrl = convertToEmbedUrl(videoUrl);
-                        
                         const videoHTML = `
                             <div class="aspect-video w-full rounded-xl overflow-hidden shadow-md bg-black">
                                 <iframe src="${embedUrl}" title="Vídeo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="w-full h-full"></iframe>
@@ -408,7 +416,6 @@
                     });
                 }
 
-                // Mostra a tela final e renderiza ícones dinâmicos
                 loadingDiv.classList.add('hidden');
                 contentDiv.classList.remove('hidden');
                 lucide.createIcons();
@@ -433,4 +440,3 @@
     </script>
 </body>
 </html>
-
